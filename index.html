@@ -18,6 +18,7 @@
   --sky:#3D8FC4; --sky-bg:#E3F1FA;
   --sun:#E8A400; --sun-bg:#FDF1D2;
   --coral:#E85A38; --coral-bg:#FDE4DC;
+  --purple:#7C5CBF; --purple-bg:#EBE4F7;
   --radius:18px;
 }
 *{box-sizing:border-box; margin:0; padding:0;}
@@ -36,8 +37,12 @@ body{
 .topbar h1{ font-family:'Fredoka'; font-weight:600; font-size:21px; }
 .topbar .sub{ font-size:13px; opacity:.85; margin-top:2px; }
 .topbar .deco{ position:absolute; font-size:60px; opacity:.15; right:-10px; top:-10px; }
+.topbar .points-chip{
+  position:absolute; top:16px; right:16px; background:rgba(255,255,255,.2); border-radius:20px;
+  padding:5px 12px; font-family:'Fredoka'; font-size:13px; font-weight:600; z-index:3;
+}
 
-.wrap{ max-width:640px; margin:0 auto; padding:18px 16px; }
+.wrap{ max-width:680px; margin:0 auto; padding:18px 16px; }
 section{ display:none; }
 section.show{ display:block; }
 
@@ -48,19 +53,39 @@ section.show{ display:block; }
 h2.sec-title{ font-family:'Fredoka'; font-size:20px; font-weight:600; margin-bottom:4px; }
 p.sec-sub{ color:var(--ink-soft); font-size:14px; margin-bottom:16px; }
 
-/* explore grid */
-.explore-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.explore-card{
+/* topic grid */
+.topic-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.topic-card{
   background:var(--panel); border-radius:16px; padding:16px 14px; cursor:pointer;
   box-shadow:0 2px 8px rgba(31,87,52,.08); border:2px solid transparent; transition:.15s;
-  text-align:center;
+  text-align:center; position:relative;
 }
-.explore-card:active{ transform:scale(.97); }
-.explore-card.opened{ border-color:var(--green); background:var(--green-bg); }
-.explore-card .emoji{ font-size:38px; display:block; margin-bottom:6px; }
-.explore-card .name{ font-family:'Fredoka'; font-weight:600; font-size:15px; }
-.explore-card .fact{ font-size:12.5px; color:var(--ink-soft); margin-top:8px; line-height:1.5; display:none; }
-.explore-card.opened .fact{ display:block; }
+.topic-card:active{ transform:scale(.97); }
+.topic-card .emoji{ font-size:36px; display:block; margin-bottom:6px; }
+.topic-card .name{ font-family:'Fredoka'; font-weight:600; font-size:14.5px; }
+.topic-card .score-tag{
+  margin-top:6px; font-size:11px; font-weight:800; color:var(--green-dark); background:var(--green-bg);
+  border-radius:8px; padding:2px 7px; display:inline-block;
+}
+.topic-card .score-tag.new{ background:var(--sun-bg); color:#8a5c00; }
+
+/* topic detail */
+.topic-detail-head{ display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.topic-detail-head .emoji{ font-size:44px; }
+.topic-detail-head h2{ font-family:'Fredoka'; font-size:22px; font-weight:600; }
+.intro-fact{ background:var(--sky-bg); color:var(--green-dark); border-radius:14px; padding:14px 16px; font-size:14.5px; margin-bottom:14px; }
+.fun-facts{ background:var(--sun-bg); border-radius:14px; padding:14px 16px; margin-bottom:14px; }
+.fun-facts h3{ font-family:'Fredoka'; font-size:14px; font-weight:600; color:#8a5c00; margin-bottom:8px; }
+.fun-facts ul{ list-style:none; }
+.fun-facts li{ font-size:14px; color:var(--ink); margin-bottom:8px; padding-left:22px; position:relative; }
+.fun-facts li:last-child{ margin-bottom:0; }
+.fun-facts li::before{ content:'✨'; position:absolute; left:0; top:0; font-size:12px; }
+.resource-link{
+  display:flex; align-items:center; gap:8px; background:var(--green-bg); color:var(--green-dark);
+  border-radius:12px; padding:11px 14px; font-size:13.5px; font-weight:700; text-decoration:none; margin-bottom:16px;
+}
+.resource-link .arrow{ margin-left:auto; }
+.back-btn{ background:none; border:none; color:var(--ink-soft); font-family:'Nunito'; font-weight:700; font-size:14px; cursor:pointer; margin-bottom:12px; display:flex; align-items:center; gap:4px; }
 
 /* quiz */
 .quiz-progress{ display:flex; gap:5px; margin-bottom:16px; }
@@ -84,24 +109,25 @@ p.sec-sub{ color:var(--ink-soft); font-size:14px; margin-bottom:16px; }
 }
 .btn:active{ transform:scale(.98); }
 .btn.ghost{ background:var(--sky-bg); color:var(--sky); }
+.btn.small{ width:auto; padding:9px 16px; font-size:13px; }
+.btn:disabled{ opacity:.4; }
 
-/* experiments */
-.exp-item{ border-bottom:1px solid var(--hair); padding:14px 0; }
-.exp-item:last-child{ border-bottom:none; }
-.exp-head{ display:flex; align-items:center; gap:10px; cursor:pointer; }
-.exp-head .emoji{ font-size:26px; }
-.exp-head .title{ font-family:'Fredoka'; font-weight:600; font-size:16px; flex:1; }
-.exp-head .chev{ color:var(--ink-soft); transition:.2s; font-size:14px; }
-.exp-item.open .chev{ transform:rotate(90deg); }
-.exp-body{ display:none; padding:12px 4px 0 36px; font-size:14px; }
-.exp-item.open .exp-body{ display:block; }
-.exp-body .lbl{ font-weight:800; color:var(--green-dark); font-size:12.5px; text-transform:uppercase; letter-spacing:.3px; margin:10px 0 4px; }
-.exp-body .lbl:first-child{ margin-top:0; }
-.exp-body ul, .exp-body ol{ padding-left:20px; }
-.exp-body li{ margin-bottom:4px; }
-.safety{ background:var(--coral-bg); color:var(--coral); border-radius:10px; padding:8px 12px; font-size:12.5px; margin-top:10px; font-weight:700; }
+/* mystery game */
+.clue-card{ background:var(--purple-bg); color:#3E2E63; border-radius:14px; padding:16px; font-size:15px; margin-bottom:10px; font-weight:700; display:flex; gap:10px; align-items:flex-start; }
+.clue-card .num{ background:var(--purple); color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
+.mystery-opt{
+  display:block; width:100%; text-align:left; background:var(--panel); border:2px solid var(--hair);
+  border-radius:14px; padding:13px 16px; margin-bottom:9px; font-family:'Nunito'; font-size:14.5px;
+  font-weight:700; color:var(--ink); cursor:pointer;
+}
+.mystery-opt.correct{ background:var(--green-bg); border-color:var(--green); }
+.mystery-opt.wrong{ background:var(--coral-bg); border-color:var(--coral); opacity:.6; }
+.mystery-points{ text-align:center; font-family:'Fredoka'; color:var(--purple); font-size:15px; margin-bottom:10px; }
+.mystery-result{ text-align:center; padding:10px 0; }
+.mystery-result .emoji{ font-size:50px; }
+.mystery-result .msg{ font-family:'Fredoka'; font-size:19px; margin:8px 0; }
 
-/* badges */
+/* rewards */
 .badge-hero{ text-align:center; padding:10px 0 20px; }
 .badge-hero .stage{ font-size:70px; }
 .badge-hero .label{ font-family:'Fredoka'; font-size:19px; font-weight:600; margin-top:8px; }
@@ -113,6 +139,21 @@ p.sec-sub{ color:var(--ink-soft); font-size:14px; margin-bottom:16px; }
 .badge-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
 .badge-chip{ background:var(--sky-bg); border-radius:12px; padding:10px 12px; font-size:12.5px; text-align:center; color:var(--ink-soft); }
 .badge-chip.earned{ background:var(--sun-bg); color:var(--green-dark); font-weight:800; }
+
+.balance-card{ background:linear-gradient(135deg, var(--green), #4A9963); color:#fff; border-radius:18px; padding:20px; text-align:center; margin-bottom:14px; }
+.balance-card .num{ font-family:'Fredoka'; font-size:42px; font-weight:600; }
+.balance-card .lbl{ font-size:13px; opacity:.9; }
+
+.reward-item{ display:flex; align-items:center; gap:12px; border:2px solid var(--hair); border-radius:14px; padding:12px 14px; margin-bottom:10px; }
+.reward-item .info{ flex:1; }
+.reward-item .rname{ font-family:'Fredoka'; font-weight:600; font-size:14.5px; }
+.reward-item .rcost{ font-size:12.5px; color:var(--ink-soft); }
+.reward-item .del{ background:none; border:none; color:var(--coral); font-size:18px; cursor:pointer; padding:4px; }
+.add-reward-row{ display:flex; gap:8px; margin-top:12px; }
+.add-reward-row input{ border:2px solid var(--hair); border-radius:10px; padding:9px 10px; font-family:'Nunito'; font-size:13.5px; }
+.add-reward-row input.rname-input{ flex:2; }
+.add-reward-row input.rcost-input{ flex:1; }
+.parent-note{ background:var(--sun-bg); color:#8a5c00; border-radius:12px; padding:10px 12px; font-size:12px; margin-top:12px; font-weight:700; }
 
 /* bottom nav */
 .tabbar{
@@ -137,52 +178,61 @@ p.sec-sub{ color:var(--ink-soft); font-size:14px; margin-bottom:16px; }
 
 <div class="topbar">
   <div class="deco">🌿</div>
+  <div class="points-chip">⭐ <span id="topbar-points">0</span></div>
   <div class="topbar-inner">
     <div class="mascot">🦔</div>
     <div>
       <h1>Nature Explorer</h1>
-      <div class="sub">Discover the wonders of animals & plants</div>
+      <div class="sub">Facts from NASA, National Geographic & more</div>
     </div>
   </div>
 </div>
 
 <div class="wrap">
 
-  <!-- EXPLORE -->
-  <section id="explore" class="show">
-    <h2 class="sec-title">🔍 Explore Cards</h2>
-    <p class="sec-sub">Tap a card to reveal a science secret inside</p>
-    <div class="explore-grid" id="explore-grid"></div>
+  <!-- TOPICS: list -->
+  <section id="topics-list" class="show">
+    <h2 class="sec-title">📚 Topics</h2>
+    <p class="sec-sub">Tap a topic to learn cool facts, then take its quiz — earn 2 points per correct answer!</p>
+    <div class="topic-grid" id="topic-grid"></div>
   </section>
 
-  <!-- QUIZ -->
-  <section id="quiz">
+  <!-- TOPICS: detail -->
+  <section id="topic-detail">
+    <button class="back-btn" onclick="showTopicList()">← All topics</button>
+    <div class="card" id="topic-detail-card"></div>
+  </section>
+
+  <!-- TOPICS: quiz -->
+  <section id="topic-quiz">
+    <button class="back-btn" onclick="showTopicList()">← All topics</button>
     <div class="card">
-      <h2 class="sec-title">🎯 Quiz Challenge</h2>
-      <p class="sec-sub">8 questions total — how many can you get right?</p>
+      <h2 class="sec-title" id="quiz-topic-title">Quiz</h2>
       <div class="quiz-progress" id="quiz-progress"></div>
       <div id="quiz-body"></div>
     </div>
   </section>
 
-  <!-- EXPERIMENTS -->
-  <section id="experiments">
+  <!-- MYSTERY GAME -->
+  <section id="mystery">
     <div class="card">
-      <h2 class="sec-title">🧪 Home Experiments</h2>
-      <p class="sec-sub">Science experiments you can do at home — tap to see the steps</p>
-      <div id="exp-list"></div>
+      <h2 class="sec-title">🕵️ Mystery Creature</h2>
+      <p class="sec-sub">Read the clues and guess who it is. Guess early for more points!</p>
+      <div id="mystery-body"></div>
     </div>
   </section>
 
-  <!-- BADGES -->
-  <section id="badges">
+  <!-- REWARDS -->
+  <section id="rewards">
+    <div class="balance-card">
+      <div class="lbl">Points available to spend</div>
+      <div class="num" id="balance-display">0</div>
+    </div>
     <div class="card">
-      <h2 class="sec-title">🏆 My Growth</h2>
-      <p class="sec-sub">Exploring, quizzing, and experimenting help your seedling grow</p>
       <div class="badge-hero">
-        <div class="stage" id="badge-stage-emoji">🌱</div>
+        <div class="stage" id="badge-stage-emoji">🌰</div>
         <div class="label" id="badge-stage-label">Seed Stage</div>
-        <div class="points" id="badge-points">0 growth points</div>
+        <div class="points" id="badge-points">0 lifetime points earned</div>
       </div>
       <div class="badge-track"><div class="badge-track-fill" id="badge-fill" style="width:0%"></div></div>
       <div class="badge-stages">
@@ -190,58 +240,2219 @@ p.sec-sub{ color:var(--ink-soft); font-size:14px; margin-bottom:16px; }
       </div>
       <div class="badge-list" id="badge-list"></div>
     </div>
+    <div class="card">
+      <h2 class="sec-title">🎁 Reward Menu</h2>
+      <p class="sec-sub">Mom or Dad can set up rewards below. Earn enough points, then tap Redeem and show them this screen!</p>
+      <div id="reward-list"></div>
+      <div class="add-reward-row">
+        <input class="rname-input" id="new-reward-name" placeholder="Reward (e.g. Choose dessert)">
+        <input class="rcost-input" id="new-reward-cost" type="number" placeholder="Points" min="1">
+      </div>
+      <button class="btn ghost" style="margin-top:10px;" onclick="addReward()">+ Add reward</button>
+      <div class="parent-note">👋 For parents: this list and the point balance live only in this browser tab. If you close or refresh the page, they reset — so check in with your child before they redeem, or take a screenshot together to keep a record.</div>
+    </div>
   </section>
 
 </div>
 
 <div class="tabbar">
-  <div class="tab-item active" data-target="explore"><span class="ic">🔍</span><span class="lbl">Explore</span></div>
-  <div class="tab-item" data-target="quiz"><span class="ic">🎯</span><span class="lbl">Quiz</span></div>
-  <div class="tab-item" data-target="experiments"><span class="ic">🧪</span><span class="lbl">Experiments</span></div>
-  <div class="tab-item" data-target="badges"><span class="ic">🏆</span><span class="lbl">Growth</span></div>
+  <div class="tab-item active" data-target="topics-list"><span class="ic">📚</span><span class="lbl">Topics</span></div>
+  <div class="tab-item" data-target="mystery"><span class="ic">🕵️</span><span class="lbl">Mystery</span></div>
+  <div class="tab-item" data-target="rewards"><span class="ic">🏆</span><span class="lbl">Rewards</span></div>
 </div>
 
 <script>
-/* ---------------- data ---------------- */
-const exploreCards = [
-  {emoji:'🦎', name:'Chameleon', fact:"Chameleons don't change color mainly to hide from predators — they do it to regulate body temperature, show emotions, and even attract a mate!"},
-  {emoji:'🌻', name:'Sunflower', fact:'Young sunflowers follow the sun during the day, a trick called "phototropism." But once they bloom, most face a fixed direction — usually east — and stop turning.'},
-  {emoji:'🦋', name:'Monarch Butterfly', fact:"Monarch butterflies migrate thousands of miles every year — but amazingly, it's actually their great-grandchildren who complete the full round trip!"},
-  {emoji:'🌵', name:'Cactus', fact:"A cactus's spines are actually modified leaves! This helps it lose much less water, and also protects it from being eaten."},
-  {emoji:'🐙', name:'Octopus', fact:'An octopus has three hearts! Its blood is blue, because it contains a copper-based protein called hemocyanin.'},
-  {emoji:'🌳', name:'Redwood Tree', fact:'The tallest redwood trees are over 115 meters tall — about as tall as a 30-story building — and can live for more than 2,000 years!'},
-  {emoji:'🪰', name:'Venus Flytrap', fact:"A Venus flytrap's leaves need to be touched twice before they snap shut, so it doesn't waste energy closing on raindrops or dust."},
-  {emoji:'🐝', name:'Bee', fact:"Bees perform a 'waggle dance' to tell other bees the direction and distance to a flower's nectar."},
+/* ============================================================
+   DATA — facts checked against NASA, National Geographic Kids,
+   and Kiddle (kid-safe encyclopedia)
+   ============================================================ */
+const topics = [
+  {
+    "id": "chameleon",
+    "emoji": "🦎",
+    "name": "Chameleon",
+    "intro": "Chameleons change color mainly to regulate their body temperature and show emotions — not primarily to hide from predators like many people think.",
+    "clues": [
+      "I can change the color of my skin.",
+      "My eyes can swivel and look in two different directions at once.",
+      "I catch insects by shooting out a super long, sticky tongue."
+    ],
+    "questions": [
+      {
+        "q": "Why do chameleons mainly change color?",
+        "opts": [
+          "To hide from predators",
+          "To regulate body temperature and show emotion",
+          "Just to look nice",
+          "Because they get lost"
+        ],
+        "correct": 1,
+        "explain": "Chameleons change color mainly to regulate body temperature, communicate mood, and attract mates — camouflage is only a small part of it."
+      },
+      {
+        "q": "How do chameleons catch insects?",
+        "opts": [
+          "They chase them on the ground",
+          "They shoot out a long, sticky tongue",
+          "They dig traps",
+          "They wait for insects to come to their mouth"
+        ],
+        "correct": 1,
+        "explain": "A chameleon's tongue can shoot out faster than a blink to snag its prey."
+      },
+      {
+        "q": "What's special about a chameleon's eyes?",
+        "opts": [
+          "They are always closed",
+          "They can move independently in two directions",
+          "They can only see in black and white",
+          "They have no eyelids at all"
+        ],
+        "correct": 1,
+        "explain": "Each eye can move and focus separately, giving chameleons a nearly 360-degree view."
+      },
+      {
+        "q": "What are chameleon feet specially adapted for?",
+        "opts": [
+          "Swimming",
+          "Digging burrows",
+          "Gripping branches tightly",
+          "Running fast on flat ground"
+        ],
+        "correct": 2,
+        "explain": "Chameleon toes are grouped like tongs, which helps them grip branches very securely."
+      },
+      {
+        "q": "Chameleons belong to which animal group?",
+        "opts": [
+          "Amphibians",
+          "Lizards (reptiles)",
+          "Birds",
+          "Insects"
+        ],
+        "correct": 1,
+        "explain": "Chameleons are a type of lizard, which makes them reptiles."
+      },
+      {
+        "q": "True or false: chameleons change color mainly to hide from predators.",
+        "opts": [
+          "True",
+          "False"
+        ],
+        "correct": 1,
+        "explain": "False — regulating temperature and showing emotion are the main reasons; camouflage is only a minor factor."
+      },
+      {
+        "q": "A chameleon's tongue can shoot out to be about how long compared to its body?",
+        "opts": [
+          "Shorter than its body",
+          "About the same length as its body",
+          "Longer than its own body",
+          "It has no tongue"
+        ],
+        "correct": 2,
+        "explain": "A chameleon's tongue can be longer than its entire body — great for catching distant insects!"
+      },
+      {
+        "q": "Where do most chameleon species live?",
+        "opts": [
+          "Antarctica",
+          "Madagascar and Africa",
+          "North America",
+          "The deep ocean"
+        ],
+        "correct": 1,
+        "explain": "Most chameleon species are found in Madagascar and mainland Africa, with a few elsewhere in Asia and southern Europe."
+      }
+    ],
+    "facts": [
+      "There are over 200 known species of chameleon, and most of them live in Madagascar.",
+      "A chameleon's tail can curl up like a spring and works almost like an extra hand for gripping branches.",
+      "Some chameleons can change color in less than 20 seconds.",
+      "The smallest chameleon species is tiny enough to fit on the tip of a matchstick."
+    ],
+    "resources": [
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://kids.nationalgeographic.com/animals/reptiles/facts/chameleon"
+      }
+    ]
+  },
+  {
+    "id": "monarch",
+    "emoji": "🦋",
+    "name": "Monarch Butterfly",
+    "intro": "Monarch butterflies migrate thousands of miles each year — but amazingly, it usually takes 3-4 generations of monarchs to complete one full round trip.",
+    "clues": [
+      "I have beautiful orange and black wings.",
+      "My caterpillars only eat one type of plant, called milkweed.",
+      "I migrate thousands of miles, but it takes several generations of my family to complete the full round trip."
+    ],
+    "questions": [
+      {
+        "q": "How many generations does it usually take Monarchs to complete one round-trip migration?",
+        "opts": [
+          "Just 1",
+          "2",
+          "3 to 4",
+          "10 or more"
+        ],
+        "correct": 2,
+        "explain": "It takes a relay of about 3-4 generations to complete one full round-trip migration."
+      },
+      {
+        "q": "What do Monarch caterpillars eat almost exclusively?",
+        "opts": [
+          "Milkweed",
+          "Grass",
+          "Rose petals",
+          "Tree bark"
+        ],
+        "correct": 0,
+        "explain": "Monarch caterpillars feed only on milkweed plants, which also makes them taste bad to predators."
+      },
+      {
+        "q": "Why are a Monarch's orange and black colors useful?",
+        "opts": [
+          "They help it blend in",
+          "They warn predators it tastes bad",
+          "They attract more sunlight",
+          "They have no real purpose"
+        ],
+        "correct": 1,
+        "explain": "The bright warning colors tell predators the butterfly is distasteful thanks to chemicals from milkweed."
+      },
+      {
+        "q": "What is the butterfly's protective casing during metamorphosis called?",
+        "opts": [
+          "A cocoon web",
+          "A chrysalis",
+          "A shell",
+          "A nest"
+        ],
+        "correct": 1,
+        "explain": "Monarchs form a hard case called a chrysalis (pupa) during metamorphosis."
+      },
+      {
+        "q": "About how far can a Monarch's migration journey stretch?",
+        "opts": [
+          "A few miles",
+          "Around 100 miles",
+          "Up to about 3,000 miles",
+          "Around the whole world"
+        ],
+        "correct": 2,
+        "explain": "Monarchs can migrate almost 3,000 miles between North America and their wintering sites in Mexico or California."
+      },
+      {
+        "q": "What is the current conservation concern for Monarch butterflies?",
+        "opts": [
+          "Their population is booming",
+          "Their population has been declining",
+          "They are not affected by humans at all",
+          "They no longer migrate"
+        ],
+        "correct": 1,
+        "explain": "Monarch populations have declined significantly, largely due to loss of milkweed habitat."
+      },
+      {
+        "q": "What do adult Monarch butterflies mainly eat?",
+        "opts": [
+          "Milkweed leaves",
+          "Nectar from flowers",
+          "Other insects",
+          "Tree sap only"
+        ],
+        "correct": 1,
+        "explain": "Unlike caterpillars, adult Monarchs feed on nectar from many types of flowers."
+      },
+      {
+        "q": "Besides the sun, what else might Monarchs use to navigate on cloudy days?",
+        "opts": [
+          "A magnetic sense",
+          "Sound waves",
+          "Smell alone",
+          "They stop flying"
+        ],
+        "correct": 0,
+        "explain": "Scientists believe Monarchs may use a magnetic compass sense to help navigate when the sun is hidden."
+      }
+    ],
+    "facts": [
+      "A monarch butterfly weighs less than a paperclip, yet some fly over 3,000 miles during migration.",
+      "Monarch caterpillars store toxins from milkweed in their bodies, which makes them taste bad to predators.",
+      "Millions of monarchs cluster together on the same trees in Mexico every winter, sometimes bending branches with their weight.",
+      "A monarch goes through four life stages: egg, caterpillar (larva), chrysalis (pupa), and adult butterfly."
+    ],
+    "resources": [
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://kids.nationalgeographic.com/animals/invertebrates/facts/monarch-butterfly"
+      }
+    ]
+  },
+  {
+    "id": "cactus",
+    "emoji": "🌵",
+    "name": "Cactus",
+    "intro": "A cactus's spines are actually modified leaves — they help the plant lose far less water and protect it from being eaten in its dry desert home.",
+    "clues": [
+      "I can survive for a very long time without much water.",
+      "My spines are actually a special kind of modified leaf.",
+      "Some of my relatives, like the saguaro, can live 150-200 years and grow taller than a house."
+    ],
+    "questions": [
+      {
+        "q": "What are cactus spines actually modified from?",
+        "opts": [
+          "Roots",
+          "Flowers",
+          "Leaves",
+          "Bark"
+        ],
+        "correct": 2,
+        "explain": "Cactus spines are modified leaves, which helps the plant lose much less water through evaporation."
+      },
+      {
+        "q": "How tall can a saguaro cactus grow?",
+        "opts": [
+          "About 1 meter",
+          "About 3 meters",
+          "Over 12 meters (40 feet)",
+          "Over 100 meters"
+        ],
+        "correct": 2,
+        "explain": "Saguaro cacti can grow more than 12 meters tall — as tall as a 4-story building!"
+      },
+      {
+        "q": "About how long can saguaro cacti live?",
+        "opts": [
+          "5-10 years",
+          "20-30 years",
+          "150-200 years",
+          "Only 1 year"
+        ],
+        "correct": 2,
+        "explain": "Saguaros are famously long-lived, often surviving 150 to 200 years."
+      },
+      {
+        "q": "Why do many cacti only open their breathing pores at night?",
+        "opts": [
+          "To catch insects",
+          "To lose less water in the daytime heat",
+          "Because they sleep at night",
+          "It has no special reason"
+        ],
+        "correct": 1,
+        "explain": "Opening pores only at night helps cacti conserve precious water during the hot day."
+      },
+      {
+        "q": "What does a cactus store inside its thick body?",
+        "opts": [
+          "Sand",
+          "Water",
+          "Oxygen tanks",
+          "Extra seeds only"
+        ],
+        "correct": 1,
+        "explain": "A cactus stores water inside its thick, fleshy body to survive long dry periods."
+      },
+      {
+        "q": "Around what age does a saguaro usually grow its first side arm?",
+        "opts": [
+          "1-2 years old",
+          "75-100 years old",
+          "500 years old",
+          "It never grows arms"
+        ],
+        "correct": 1,
+        "explain": "Saguaros grow very slowly and often don’t sprout their first arm until they are 75-100 years old."
+      },
+      {
+        "q": "Which of these commonly pollinates saguaro cactus flowers?",
+        "opts": [
+          "Bats and bees",
+          "Only earthworms",
+          "Fish",
+          "Snails"
+        ],
+        "correct": 0,
+        "explain": "Saguaro flowers are pollinated by bats, bees, and birds, among other visitors."
+      },
+      {
+        "q": "Cacti are especially adapted to survive in which kind of environment?",
+        "opts": [
+          "Rainforests",
+          "Deserts",
+          "Deep oceans",
+          "Arctic tundra"
+        ],
+        "correct": 1,
+        "explain": "Cacti have evolved special adaptations, like spines and water storage, to thrive in dry desert environments."
+      }
+    ],
+    "facts": [
+      "Cacti store water in their thick stems, letting some species survive over a year without rain.",
+      "Nearly all cactus species are naturally found only in the Americas.",
+      "A cactus's spines are actually modified leaves that help reduce water loss and deter hungry animals.",
+      "The giant saguaro cactus can live over 150 years and doesn't grow its first arm until it's around 75 years old."
+    ],
+    "resources": [
+      {
+        "label": "Read more at Kiddle Encyclopedia",
+        "url": "https://kids.kiddle.co/Saguaro"
+      }
+    ]
+  },
+  {
+    "id": "octopus",
+    "emoji": "🐙",
+    "name": "Octopus",
+    "intro": "An octopus has three hearts, and its blood is blue because it contains a copper-based protein called hemocyanin instead of the iron-based protein found in human blood.",
+    "clues": [
+      "I live in the ocean and have eight long arms.",
+      "My blood is blue instead of red.",
+      "I have three hearts, and the only hard part of my whole body is my beak."
+    ],
+    "questions": [
+      {
+        "q": "How many hearts does an octopus have?",
+        "opts": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "correct": 2,
+        "explain": "An octopus has three hearts, and its blood is blue!"
+      },
+      {
+        "q": "Why is octopus blood blue?",
+        "opts": [
+          "It contains iron like human blood",
+          "It contains a copper-based protein called hemocyanin",
+          "It has no proteins at all",
+          "It reflects the ocean color"
+        ],
+        "correct": 1,
+        "explain": "Octopus blood uses hemocyanin, a copper-based protein, which gives it a blue color."
+      },
+      {
+        "q": "What can an octopus do if it loses an arm?",
+        "opts": [
+          "Nothing, it stays missing forever",
+          "Regrow it over time",
+          "Grow two arms instead",
+          "Die immediately"
+        ],
+        "correct": 1,
+        "explain": "Octopuses are able to regenerate, or regrow, a lost arm over time."
+      },
+      {
+        "q": "How does an octopus commonly escape from danger?",
+        "opts": [
+          "It shoots a cloud of ink and jets away",
+          "It flies away",
+          "It grows spikes",
+          "It freezes completely still forever"
+        ],
+        "correct": 0,
+        "explain": "Octopuses release a cloud of dark ink and jet away using water expelled from a siphon."
+      },
+      {
+        "q": "What is the only hard part of an octopus's entire body?",
+        "opts": [
+          "Its skin",
+          "Its beak",
+          "Its arms",
+          "Its eyes"
+        ],
+        "correct": 1,
+        "explain": "An octopus's beak is the only hard body part, letting its soft body squeeze through tiny gaps."
+      },
+      {
+        "q": "Octopuses are widely considered to be very ___?",
+        "opts": [
+          "Intelligent",
+          "Slow-thinking",
+          "Aggressive to humans",
+          "Immobile"
+        ],
+        "correct": 0,
+        "explain": "Octopuses are known for being highly intelligent problem-solvers among invertebrates."
+      },
+      {
+        "q": "About how many species of octopus are known to exist?",
+        "opts": [
+          "About 10",
+          "About 50",
+          "Around 300",
+          "Over 10,000"
+        ],
+        "correct": 2,
+        "explain": "There are roughly 300 known species of octopus living in oceans worldwide."
+      },
+      {
+        "q": "Where do most octopuses spend their time?",
+        "opts": [
+          "Near the ocean floor",
+          "High up in the air",
+          "On land",
+          "Frozen in ice"
+        ],
+        "correct": 0,
+        "explain": "Most octopus species live along the ocean floor, often in dens made from rocks."
+      }
+    ],
+    "facts": [
+      "An octopus has three hearts and blue-colored blood.",
+      "An octopus can squeeze through any gap bigger than its beak, the only hard part of its whole body.",
+      "Some octopus species can change both color and skin texture in less than a second to match their surroundings.",
+      "Octopuses have around 500 million neurons, and more than half of them are located in their arms rather than their brain."
+    ],
+    "resources": [
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://www.natgeokids.com/uk/discover/animals/sea-life/octopus-facts/"
+      }
+    ]
+  },
+  {
+    "id": "redwood",
+    "emoji": "🌳",
+    "name": "Redwood Tree",
+    "intro": "The tallest redwood trees are over 115 meters tall — about as tall as a 30-story building — and some can live for more than 2,000 years.",
+    "clues": [
+      "I'm one of the tallest kinds of living things on Earth.",
+      "I can live for more than 2,000 years.",
+      "The tallest of my kind grow over 115 meters tall — taller than a 30-story building."
+    ],
+    "questions": [
+      {
+        "q": "What makes redwood trees so famous compared to other trees?",
+        "opts": [
+          "They're the tallest tree species on Earth",
+          "They only grow in deserts",
+          "They can't grow taller than a house",
+          "They live only 5 years"
+        ],
+        "correct": 0,
+        "explain": "Redwoods are recognized as the tallest tree species in the world."
+      },
+      {
+        "q": "About how tall can the tallest redwoods grow?",
+        "opts": [
+          "About 20 meters",
+          "About 50 meters",
+          "Over 115 meters",
+          "Over 500 meters"
+        ],
+        "correct": 2,
+        "explain": "The tallest known redwoods stand over 115 meters (about 380 feet) tall."
+      },
+      {
+        "q": "About how long can redwood trees live?",
+        "opts": [
+          "About 50 years",
+          "About 200 years",
+          "More than 2,000 years",
+          "Only 10 years"
+        ],
+        "correct": 2,
+        "explain": "Some redwoods are estimated to be more than 2,000 years old."
+      },
+      {
+        "q": "Where are redwood trees mainly found growing naturally?",
+        "opts": [
+          "California, USA",
+          "The Sahara Desert",
+          "Antarctica",
+          "The Amazon"
+        ],
+        "correct": 0,
+        "explain": "Coast redwoods grow naturally along the coast of California, USA."
+      },
+      {
+        "q": "What helps protect redwoods from wildfires?",
+        "opts": [
+          "Thick, fire-resistant bark",
+          "They have no defense",
+          "Being underground",
+          "Being made of stone"
+        ],
+        "correct": 0,
+        "explain": "Redwood bark is thick and naturally resistant to fire, helping the tree survive."
+      },
+      {
+        "q": "Redwoods are considered among the ___ living organisms on Earth by size?",
+        "opts": [
+          "Smallest",
+          "Largest",
+          "Most colorful",
+          "Fastest-growing"
+        ],
+        "correct": 1,
+        "explain": "Because of their massive size, redwoods rank among the largest living organisms on the planet."
+      },
+      {
+        "q": "What general type of tree is a redwood?",
+        "opts": [
+          "A cone-bearing evergreen (conifer)",
+          "A flowering fruit tree",
+          "A type of cactus",
+          "A type of moss"
+        ],
+        "correct": 0,
+        "explain": "Redwoods are conifers — cone-bearing evergreen trees."
+      },
+      {
+        "q": "Redwood wood is naturally resistant to which two things?",
+        "opts": [
+          "Sunlight and wind",
+          "Insects and rot",
+          "Cold and snow",
+          "Rain and lightning"
+        ],
+        "correct": 1,
+        "explain": "Redwood timber is naturally resistant to insects and decay, which is part of why the trees can live so long."
+      }
+    ],
+    "facts": [
+      "Coast redwoods can live over 2,000 years and are among the tallest trees on Earth, with some over 100 meters tall.",
+      "Redwood bark can be over 30 centimeters (about a foot) thick, which helps protect the tree from fire.",
+      "Redwoods can grow new trees not just from seeds, but also by sprouting from their own roots or stumps.",
+      "A single giant redwood can hold thousands of gallons of water inside its enormous trunk."
+    ],
+    "resources": []
+  },
+  {
+    "id": "venusflytrap",
+    "emoji": "🪰",
+    "name": "Venus Flytrap",
+    "intro": "A Venus flytrap's leaves need to be touched twice within about 20 seconds before they snap shut — a clever trick that stops it from wasting energy on raindrops or dust.",
+    "clues": [
+      "I'm a plant, but I eat insects to get extra nutrients.",
+      "My leaves can snap shut like a trap.",
+      "I need to be touched twice within a short time before I close, so I don't waste energy on raindrops."
+    ],
+    "questions": [
+      {
+        "q": "How many times must a Venus flytrap's trigger hairs be touched before it closes?",
+        "opts": [
+          "Just once",
+          "Twice",
+          "Five times",
+          "It never needs to be touched"
+        ],
+        "correct": 1,
+        "explain": "The trap only closes after trigger hairs are touched twice within a short window, avoiding false alarms."
+      },
+      {
+        "q": "About how fast does a Venus flytrap snap shut?",
+        "opts": [
+          "About 1/10 of a second",
+          "About 1 hour",
+          "About 1 minute",
+          "About 1 full day"
+        ],
+        "correct": 0,
+        "explain": "A Venus flytrap's trap can snap shut in roughly a tenth of a second."
+      },
+      {
+        "q": "Where is the Venus flytrap naturally found in the wild?",
+        "opts": [
+          "Only in North and South Carolina, USA",
+          "All over the world",
+          "Only in Australia",
+          "Only in the ocean"
+        ],
+        "correct": 0,
+        "explain": "Venus flytraps are native only to a small wetland region of North and South Carolina."
+      },
+      {
+        "q": "Does a Venus flytrap still perform photosynthesis like other plants?",
+        "opts": [
+          "No, it only eats insects",
+          "Yes, it still makes its own food from sunlight",
+          "It photosynthesizes only at night",
+          "It has no leaves to do so"
+        ],
+        "correct": 1,
+        "explain": "Venus flytraps still photosynthesize — eating insects just supplements nutrients missing from poor soil."
+      },
+      {
+        "q": "What does a Venus flytrap's diet mostly consist of?",
+        "opts": [
+          "Mostly flies",
+          "Ants, beetles, and spiders",
+          "Only frogs",
+          "Only pollen"
+        ],
+        "correct": 1,
+        "explain": "Studies show a Venus flytrap's diet is mostly ants, beetles, and spiders — flies make up a small share."
+      },
+      {
+        "q": "About how long can it take a Venus flytrap to fully digest an insect?",
+        "opts": [
+          "A few seconds",
+          "Up to about 10 days",
+          "Several years",
+          "It never digests, just holds them"
+        ],
+        "correct": 1,
+        "explain": "Digestion can take up to around ten days before the trap reopens."
+      },
+      {
+        "q": "What is the current conservation status of wild Venus flytraps?",
+        "opts": [
+          "Extremely common and increasing",
+          "Vulnerable, with declining wild populations",
+          "Extinct in the wild",
+          "Found on every continent"
+        ],
+        "correct": 1,
+        "explain": "Wild Venus flytrap populations have dropped sharply and are now considered vulnerable."
+      },
+      {
+        "q": "Why doesn't a Venus flytrap snap shut from a single raindrop?",
+        "opts": [
+          "It has no trigger hairs",
+          "It requires two touches within a short time window",
+          "Raindrops are too light to touch it",
+          "It only closes at night"
+        ],
+        "correct": 1,
+        "explain": "Requiring two touches in quick succession helps the plant avoid wasting energy on rain or debris."
+      },
+      {
+        "q": "Which continent is home to wild Venus flytraps?",
+        "opts": [
+          "North America",
+          "Australia",
+          "Africa",
+          "Asia"
+        ],
+        "correct": 0,
+        "explain": "Venus flytraps are native only to a small coastal region of North America."
+      },
+      {
+        "q": "A Venus flytrap's snapping trap is a modified version of which plant part?",
+        "opts": [
+          "A leaf",
+          "A root",
+          "A flower petal",
+          "A seed pod"
+        ],
+        "correct": 0,
+        "explain": "Like pitcher plants, a Venus flytrap's trap is actually a highly modified leaf."
+      },
+      {
+        "q": "What color often lines the inside of a Venus flytrap's trap, possibly helping lure insects?",
+        "opts": [
+          "A reddish color",
+          "Bright blue",
+          "Solid black",
+          "Silver"
+        ],
+        "correct": 0,
+        "explain": "Many traps have a reddish inner color, which may help attract insects the way a flower would."
+      },
+      {
+        "q": "About how many trigger hairs does each side (lobe) of a Venus flytrap usually have?",
+        "opts": [
+          "About 3",
+          "About 20",
+          "Just 1",
+          "Over 100"
+        ],
+        "correct": 0,
+        "explain": "Each lobe of the trap typically has about three small trigger hairs that sense movement."
+      },
+      {
+        "q": "About how many times can a single Venus flytrap trap close and reopen before it stops working?",
+        "opts": [
+          "Around 5 to 7 times",
+          "Once only",
+          "Hundreds of times",
+          "It never wears out"
+        ],
+        "correct": 0,
+        "explain": "Each individual trap can usually only close and reopen around 5 to 7 times before it stops working and turns black."
+      },
+      {
+        "q": "Why shouldn't people keep touching a Venus flytrap's trap just for fun?",
+        "opts": [
+          "It wastes the plant's energy and can wear the trap out",
+          "It makes the trap grow bigger",
+          "It helps the plant photosynthesize faster",
+          "It makes the plant produce more flowers"
+        ],
+        "correct": 0,
+        "explain": "Triggering a trap uses up valuable energy without any food reward, and each trap can only close a limited number of times before it stops working."
+      },
+      {
+        "q": "What kind of soil do Venus flytraps naturally prefer?",
+        "opts": [
+          "Boggy, nutrient-poor, acidic soil",
+          "Rich, fertile garden soil",
+          "Dry desert sand",
+          "Salty ocean sand"
+        ],
+        "correct": 0,
+        "explain": "Venus flytraps naturally grow in nutrient-poor, acidic, boggy soil — one reason they evolved to trap insects for extra nutrients."
+      }
+    ],
+    "facts": [
+      "Charles Darwin once called the Venus flytrap 'one of the most wonderful plants in the world.'",
+      "Venus flytraps are only found growing wild in one small area on the coast of North and South Carolina, USA.",
+      "Wildfires actually help wild Venus flytraps by clearing away taller plants that would block their sunlight.",
+      "In the wild, Venus flytraps are now considered a vulnerable species due to poaching and habitat loss."
+    ],
+    "resources": [
+      {
+        "label": "Venus flytrap plant profile at Kew Gardens",
+        "url": "https://www.kew.org/plants/venus-flytrap"
+      },
+      {
+        "label": "Carnivorous plants explained at Kew Gardens",
+        "url": "https://www.kew.org/read-and-watch/carnivorous-plants"
+      },
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://kids.nationalgeographic.com/awesome-8/article/carnivorous-plants"
+      }
+    ]
+  },
+  {
+    "id": "bee",
+    "emoji": "🐝",
+    "name": "Bee",
+    "intro": "Bees perform a \"waggle dance\" to tell other bees the exact direction and distance to a flower's nectar — one of the most remarkable forms of animal communication.",
+    "clues": [
+      "I'm a flying insect that visits lots of flowers.",
+      "I do a special dance to tell my hive-mates where food is.",
+      "My waggle dance tells other bees the exact direction and distance to nectar."
+    ],
+    "questions": [
+      {
+        "q": "How do bees tell other bees where to find nectar?",
+        "opts": [
+          "By singing",
+          "By doing a waggle dance",
+          "By writing symbols",
+          "By drawing pictures"
+        ],
+        "correct": 1,
+        "explain": "Bees perform a 'waggle dance' to share the direction and distance to nectar with their hive-mates."
+      },
+      {
+        "q": "What crucial job do bees do for many flowering plants?",
+        "opts": [
+          "Pollination",
+          "Digging soil",
+          "Watering roots",
+          "Cutting stems"
+        ],
+        "correct": 0,
+        "explain": "Bees are essential pollinators, helping many plants reproduce and produce fruit."
+      },
+      {
+        "q": "In a honeybee colony, who is responsible for laying the eggs?",
+        "opts": [
+          "The worker bees",
+          "The drones",
+          "The queen",
+          "All bees equally"
+        ],
+        "correct": 2,
+        "explain": "The queen bee is the one responsible for laying eggs in the colony."
+      },
+      {
+        "q": "What can bees see on flowers that humans usually cannot?",
+        "opts": [
+          "Ultraviolet patterns",
+          "Infrared heat",
+          "Sound waves",
+          "Nothing extra"
+        ],
+        "correct": 0,
+        "explain": "Bees can see ultraviolet patterns on flowers that act like landing guides, invisible to human eyes."
+      },
+      {
+        "q": "Are all bee species social insects that live in big colonies?",
+        "opts": [
+          "Yes, every single species",
+          "No, many species are solitary",
+          "Only queen bees are real bees",
+          "Bees never live in groups"
+        ],
+        "correct": 1,
+        "explain": "While honeybees are social, many bee species are actually solitary."
+      },
+      {
+        "q": "What do bees make and store as food in their hive?",
+        "opts": [
+          "Honey",
+          "Milk",
+          "Bread",
+          "Syrup from trees"
+        ],
+        "correct": 0,
+        "explain": "Bees make and store honey using nectar they collect from flowers."
+      },
+      {
+        "q": "What are male bees in a colony called?",
+        "opts": [
+          "Workers",
+          "Drones",
+          "Larvae",
+          "Foragers"
+        ],
+        "correct": 1,
+        "explain": "Male bees are called drones, and their main role is mating with the queen."
+      },
+      {
+        "q": "Besides nectar, what other substance do bees collect from flowers?",
+        "opts": [
+          "Pollen",
+          "Sand",
+          "Salt",
+          "Sap only"
+        ],
+        "correct": 0,
+        "explain": "Bees also collect pollen, which provides protein for the colony."
+      }
+    ],
+    "facts": [
+      "Honeybees visit around 2 million flowers just to make one pound (about half a kilogram) of honey.",
+      "A single beehive can contain tens of thousands of bees, almost all of them female worker bees.",
+      "Bees actually have five eyes in total: two large compound eyes and three small simple eyes on top of the head.",
+      "Bees are responsible for pollinating roughly one third of the food crops that humans eat."
+    ],
+    "resources": [
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://www.natgeokids.com/uk/primary-resource/the-buzz-about-bees/"
+      }
+    ]
+  },
+  {
+    "id": "blackhole",
+    "emoji": "🕳️",
+    "name": "Black Hole",
+    "intro": "A black hole is a region of space with gravity so strong that nothing — not even light — can escape it. Our Milky Way's center hides a supermassive black hole called Sagittarius A*.",
+    "clues": [
+      "I'm found somewhere far out in space.",
+      "Nothing can escape my pull, not even light.",
+      "There's a supermassive version of me at the center of the Milky Way, called Sagittarius A*."
+    ],
+    "questions": [
+      {
+        "q": "What can't escape a black hole's gravity, not even?",
+        "opts": [
+          "Sound",
+          "Light",
+          "Heat",
+          "Radio waves only"
+        ],
+        "correct": 1,
+        "explain": "A black hole's gravity is so strong that not even light, the fastest thing in the universe, can escape."
+      },
+      {
+        "q": "What is the boundary around a black hole called?",
+        "opts": [
+          "The rim",
+          "The event horizon",
+          "The gravity line",
+          "The dark zone"
+        ],
+        "correct": 1,
+        "explain": "The event horizon is the boundary beyond which nothing can escape the black hole."
+      },
+      {
+        "q": "What usually causes a stellar black hole to form?",
+        "opts": [
+          "Two planets colliding",
+          "The collapse of a massive dying star",
+          "A comet exploding",
+          "Cooling of a small star"
+        ],
+        "correct": 1,
+        "explain": "Stellar black holes form when a massive star runs out of fuel and its core collapses, often causing a supernova."
+      },
+      {
+        "q": "What is the name of the supermassive black hole at our Milky Way's center?",
+        "opts": [
+          "Sagittarius A*",
+          "Orion Prime",
+          "The Great Attractor",
+          "Andromeda X"
+        ],
+        "correct": 0,
+        "explain": "Our galaxy’s central supermassive black hole is called Sagittarius A* (pronounced \"A-star\")."
+      },
+      {
+        "q": "About how many times the Sun's mass is Sagittarius A*?",
+        "opts": [
+          "About 4 times",
+          "About 4,000 times",
+          "About 4 million times",
+          "The same as the Sun"
+        ],
+        "correct": 2,
+        "explain": "Sagittarius A* is about 4 million times more massive than our Sun."
+      },
+      {
+        "q": "Since black holes reflect no light, how do scientists mainly detect them?",
+        "opts": [
+          "By tasting space dust",
+          "By observing effects on nearby stars and gas",
+          "By flying spacecraft inside them",
+          "They cannot be detected at all"
+        ],
+        "correct": 1,
+        "explain": "Scientists detect black holes indirectly, by observing how their gravity affects nearby stars and gas."
+      },
+      {
+        "q": "Will our Sun ever turn into a black hole?",
+        "opts": [
+          "Yes, in a few years",
+          "No, it is not massive enough",
+          "Yes, but only after cooling down",
+          "It already is one"
+        ],
+        "correct": 1,
+        "explain": "Our Sun is not massive enough to ever collapse into a black hole."
+      },
+      {
+        "q": "What is the single point at the very center of a black hole called?",
+        "opts": [
+          "The nucleus",
+          "The singularity",
+          "The core shell",
+          "The center mass"
+        ],
+        "correct": 1,
+        "explain": "The singularity is the extremely dense point where a black hole's mass is concentrated."
+      }
+    ],
+    "facts": [
+      "If the Sun were somehow replaced by a black hole of the same mass, Earth would keep orbiting normally — black holes aren't cosmic vacuum cleaners.",
+      "Time actually passes more slowly near a black hole because of its powerful gravity, an effect predicted by Einstein's theory of relativity.",
+      "In 2019, scientists released the first-ever direct image showing a black hole's shadow, from the center of the galaxy M87.",
+      "Stellar-mass black holes form from a single collapsed star, while supermassive black holes can be billions of times heavier than the Sun."
+    ],
+    "resources": [
+      {
+        "label": "Read more at NASA Space Place",
+        "url": "https://spaceplace.nasa.gov/black-holes/en/"
+      }
+    ]
+  },
+  {
+    "id": "universe",
+    "emoji": "🌌",
+    "name": "Universe",
+    "intro": "The universe holds everything that exists — every star, planet, galaxy, and even empty space itself — and it's still expanding in every direction, getting bigger every second.",
+    "facts": [
+      "The universe is about 13.8 billion years old, starting with a rapid expansion scientists call the Big Bang.",
+      "Our Milky Way galaxy contains over 100 billion stars, and there are hundreds of billions of galaxies in the observable universe.",
+      "The universe is still expanding today, and that expansion is actually speeding up over time.",
+      "Light from the most distant galaxies takes billions of years to reach us, so looking far into space also means looking back in time."
+    ],
+    "resources": [
+      {
+        "label": "Universe overview at NASA Science",
+        "url": "https://science.nasa.gov/universe/"
+      },
+      {
+        "label": "What Is the Big Bang? at NASA Space Place (for kids)",
+        "url": "https://spaceplace.nasa.gov/big-bang/en/"
+      }
+    ],
+    "clues": [
+      "I'm everything that exists — every star, planet, and galaxy, plus empty space itself.",
+      "I started with an incredibly fast expansion around 13.8 billion years ago.",
+      "I'm still expanding today, and that expansion is actually speeding up!"
+    ],
+    "questions": [
+      {
+        "q": "About how old is the universe?",
+        "opts": [
+          "About 13.8 billion years old",
+          "About 4.5 million years old",
+          "About 100 years old",
+          "About 1 billion years old"
+        ],
+        "correct": 0,
+        "explain": "Scientists estimate the universe is about 13.8 billion years old, based on studies of its expansion and its oldest light."
+      },
+      {
+        "q": "What do scientists call the rapid expansion that started the universe?",
+        "opts": [
+          "The Big Bang",
+          "The Great Explosion",
+          "The Star Burst",
+          "The Cosmic Flash"
+        ],
+        "correct": 0,
+        "explain": "Scientists call the rapid expansion at the start of the universe the Big Bang."
+      },
+      {
+        "q": "About how many stars are in our Milky Way galaxy?",
+        "opts": [
+          "About 100",
+          "About 100,000",
+          "Over 100 billion",
+          "Exactly 1 million"
+        ],
+        "correct": 2,
+        "explain": "Our Milky Way galaxy contains over 100 billion stars."
+      },
+      {
+        "q": "Is the universe still expanding today?",
+        "opts": [
+          "Yes, and the expansion is even speeding up",
+          "No, it stopped expanding long ago",
+          "It's shrinking now",
+          "It only expanded for one day"
+        ],
+        "correct": 0,
+        "explain": "The universe continues to expand, and observations show that this expansion is actually accelerating."
+      },
+      {
+        "q": "Why does looking at very distant galaxies also mean looking back in time?",
+        "opts": [
+          "Because their light takes billions of years to reach us",
+          "Because telescopes can time travel",
+          "Because distant galaxies are actually in the past",
+          "Because space is see-through only at night"
+        ],
+        "correct": 0,
+        "explain": "Light from very distant galaxies takes billions of years to travel to us, so we see them as they looked long ago."
+      },
+      {
+        "q": "About how many galaxies exist in the observable universe?",
+        "opts": [
+          "Hundreds of billions",
+          "About 10",
+          "About 1,000",
+          "Exactly 1 million"
+        ],
+        "correct": 0,
+        "explain": "Astronomers estimate there are hundreds of billions of galaxies in the observable universe."
+      },
+      {
+        "q": "What is a galaxy?",
+        "opts": [
+          "A huge collection of stars, gas, and dust, held together by gravity",
+          "A single giant star",
+          "A type of black hole",
+          "A cloud found only in Earth's sky"
+        ],
+        "correct": 0,
+        "explain": "A galaxy is an enormous collection of stars, gas, dust, and often planets, all held together by gravity."
+      },
+      {
+        "q": "What did scientists detect that gives strong evidence for the Big Bang?",
+        "opts": [
+          "The cosmic microwave background, leftover light from the early universe",
+          "Radio signals from aliens",
+          "Sound waves from the Moon",
+          "Fossils found on Mars"
+        ],
+        "correct": 0,
+        "explain": "The cosmic microwave background is faint leftover light from the early universe, and it provides strong evidence supporting the Big Bang theory."
+      }
+    ]
+  },
+  {
+    "id": "ant",
+    "emoji": "🐜",
+    "name": "Ant",
+    "intro": "Ants use a chemical signal called a pheromone to leave invisible scent trails, guiding their nestmates straight to a food source.",
+    "clues": [
+      "I live together with thousands of others in a group called a colony.",
+      "I leave an invisible trail to guide my friends to food.",
+      "I use a chemical called pheromone, and some of my worker relatives can carry 50 times their own body weight."
+    ],
+    "questions": [
+      {
+        "q": "What chemical signals do ants use to leave a trail to food?",
+        "opts": [
+          "Hormones",
+          "Pheromones",
+          "Vitamins",
+          "Enzymes only"
+        ],
+        "correct": 1,
+        "explain": "Ants release pheromones, chemical signals that other ants can follow to find food."
+      },
+      {
+        "q": "Some worker ants can carry how many times their own body weight?",
+        "opts": [
+          "2 times",
+          "10 times",
+          "Up to 50 times",
+          "It cannot carry anything"
+        ],
+        "correct": 2,
+        "explain": "Certain ant species can carry up to 50 times their own body weight."
+      },
+      {
+        "q": "In an ant colony, who is mainly responsible for laying eggs?",
+        "opts": [
+          "The worker ants",
+          "The queen",
+          "The drones",
+          "Every ant equally"
+        ],
+        "correct": 1,
+        "explain": "The queen ant is the primary egg-layer for the colony."
+      },
+      {
+        "q": "About how many known ant species exist worldwide?",
+        "opts": [
+          "About 50",
+          "About 500",
+          "Over 12,000",
+          "Only 10"
+        ],
+        "correct": 2,
+        "explain": "Scientists have identified more than 12,000 known ant species, with more likely undiscovered."
+      },
+      {
+        "q": "Where are ants notably NOT commonly found?",
+        "opts": [
+          "Rainforests",
+          "Antarctica",
+          "Deserts",
+          "Grasslands"
+        ],
+        "correct": 1,
+        "explain": "Ants are found almost everywhere except places like Antarctica, Iceland, and Greenland."
+      },
+      {
+        "q": "What is the main job of male ants, called drones?",
+        "opts": [
+          "Foraging for food",
+          "Mating with the queen",
+          "Building the nest",
+          "Guarding the colony"
+        ],
+        "correct": 1,
+        "explain": "A male ant's main role is mating with the queen, after which they often die soon after."
+      },
+      {
+        "q": "Which body part do ants use to detect pheromone trails?",
+        "opts": [
+          "Their antennae",
+          "Their eyes",
+          "Their wings",
+          "Their legs only"
+        ],
+        "correct": 0,
+        "explain": "Ants use their antennae to sense chemical pheromone trails left by other ants."
+      },
+      {
+        "q": "What do worker ants typically NOT do in a colony?",
+        "opts": [
+          "Forage for food",
+          "Care for young",
+          "Lay eggs",
+          "Build the nest"
+        ],
+        "correct": 2,
+        "explain": "Worker ants handle foraging, nest-building, and caregiving, but egg-laying is mainly the queen’s role."
+      },
+      {
+        "q": "What do most ants eat?",
+        "opts": [
+          "Only meat",
+          "Only plants",
+          "Both plant and animal matter",
+          "Nothing but water"
+        ],
+        "correct": 2,
+        "explain": "Most ants are omnivores, eating a mix of seeds, nectar, small insects, and other food."
+      },
+      {
+        "q": "Which ants usually have wings?",
+        "opts": [
+          "Every ant in the colony",
+          "Only young queens and males, during mating season",
+          "Only worker ants",
+          "No ants ever have wings"
+        ],
+        "correct": 1,
+        "explain": "Winged ants are typically young queens and males taking part in a mating flight; workers stay wingless."
+      },
+      {
+        "q": "What is it called when young queen and male ants fly off together to mate?",
+        "opts": [
+          "A swarm dive",
+          "A nuptial flight",
+          "A colony jump",
+          "A pheromone parade"
+        ],
+        "correct": 1,
+        "explain": "This mating flight is called a nuptial flight, after which a mated queen starts her own colony."
+      },
+      {
+        "q": "About how long can some ant queens live?",
+        "opts": [
+          "Only a few days",
+          "A few weeks",
+          "Several years, even decades in some species",
+          "Less than an hour"
+        ],
+        "correct": 2,
+        "explain": "Some ant queens can live for many years — even decades in a few species — far longer than most insects."
+      },
+      {
+        "q": "What do leafcutter ants mainly do with the leaves they cut?",
+        "opts": [
+          "Eat the leaves directly",
+          "Use them to grow fungus for food",
+          "Build furniture",
+          "Sell them to other colonies"
+        ],
+        "correct": 1,
+        "explain": "Leafcutter ants don't eat the leaves themselves — they use them to grow a special fungus, which is their real food source."
+      },
+      {
+        "q": "What sugary substance do some ants collect from aphids, almost like \"farming\" them?",
+        "opts": [
+          "Honeydew",
+          "Maple syrup",
+          "Pollen",
+          "Nectar"
+        ],
+        "correct": 0,
+        "explain": "Ants protect aphids and gently stroke them to collect a sugary liquid called honeydew."
+      },
+      {
+        "q": "What is an ant nest made from mounded soil, sand, or plant debris usually called?",
+        "opts": [
+          "An anthill",
+          "An ant burrow",
+          "A hive",
+          "An ant den"
+        ],
+        "correct": 0,
+        "explain": "These mounded nest structures are commonly called anthills."
+      },
+      {
+        "q": "How do ants mainly find their way back to the nest?",
+        "opts": [
+          "By following scent trails and remembering landmarks",
+          "By using GPS",
+          "By asking other insects for directions",
+          "By pure luck"
+        ],
+        "correct": 0,
+        "explain": "Ants rely heavily on pheromone scent trails plus visual landmarks to navigate back home."
+      },
+      {
+        "q": "What do fire ants famously do when their nest floods?",
+        "opts": [
+          "They abandon the colony forever",
+          "They link together to form a floating raft",
+          "They dig deeper to escape water",
+          "They fly away"
+        ],
+        "correct": 1,
+        "explain": "Fire ants can link their bodies together to form a living raft that floats on floodwater, keeping the colony safe."
+      },
+      {
+        "q": "Which body part do ants mainly use for biting?",
+        "opts": [
+          "Their mandibles (jaws)",
+          "Their antennae",
+          "Their wings",
+          "Their eyes"
+        ],
+        "correct": 0,
+        "explain": "An ant's mandibles are strong, jaw-like mouthparts used for biting, carrying food, and defending the colony."
+      }
+    ],
+    "facts": [
+      "Ants have been around for more than 100 million years — they were already alive when dinosaurs still roamed the Earth.",
+      "Scientists estimate that the combined weight of all ants on Earth is roughly similar to the combined weight of all humans.",
+      "Some queen ants mate only once in their entire life but can store that sperm for years, using it to keep laying eggs.",
+      "A few ant species can burst their own bodies open to spray a sticky, toxic substance at enemies, defending the colony at the cost of their own life."
+    ],
+    "resources": [
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://www.natgeokids.com/uk/discover/animals/insects/ant-facts/"
+      }
+    ]
+  },
+  {
+    "id": "pitcherplant",
+    "emoji": "🫙",
+    "name": "Pitcher Plant",
+    "intro": "A pitcher plant lures insects with sweet nectar into a deep, slippery cup-shaped leaf called a pitfall trap, where they can't climb back out.",
+    "clues": [
+      "I'm a plant, and I trap small creatures inside part of my own body.",
+      "I use sweet nectar to lure insects into a cup-shaped leaf.",
+      "My slippery walls and downward-pointing hairs mean my prey can almost never climb back out."
+    ],
+    "questions": [
+      {
+        "q": "What is the pitcher plant's trap commonly called?",
+        "opts": [
+          "A snap trap",
+          "A pitfall trap",
+          "A sticky trap",
+          "A net trap"
+        ],
+        "correct": 1,
+        "explain": "A pitcher plant's cup-shaped leaf works as a pitfall trap for unlucky insects."
+      },
+      {
+        "q": "What attracts insects to a pitcher plant's opening?",
+        "opts": [
+          "Loud sounds",
+          "Sweet nectar and bright colors",
+          "Bright flashing lights",
+          "Cold air"
+        ],
+        "correct": 1,
+        "explain": "Sweet nectar, bright colors, and sometimes scent are used to lure insects to the opening."
+      },
+      {
+        "q": "Why can't insects climb back out of a pitcher plant?",
+        "opts": [
+          "The opening is sealed shut",
+          "Slippery walls and downward-pointing hairs trap them",
+          "They are glued immediately",
+          "There is no way in either"
+        ],
+        "correct": 1,
+        "explain": "Slippery inner walls and hairs pointing downward make escape nearly impossible."
+      },
+      {
+        "q": "What eventually happens to insects at the bottom of the pitcher?",
+        "opts": [
+          "They fly back out",
+          "They are digested in a pool of liquid",
+          "They turn into seeds",
+          "Nothing happens to them"
+        ],
+        "correct": 1,
+        "explain": "Insects drown and are broken down by digestive liquid at the bottom of the pitcher."
+      },
+      {
+        "q": "Why do pitcher plants rely on trapping insects for nutrients?",
+        "opts": [
+          "They live in nutrient-poor soil",
+          "They dislike sunlight",
+          "They cannot photosynthesize",
+          "Insects are their only food source entirely"
+        ],
+        "correct": 0,
+        "explain": "Pitcher plants often grow in nutrient-poor soil, so trapped insects provide nitrogen they can’t get from soil."
+      },
+      {
+        "q": "About how many species of pitcher plants exist worldwide?",
+        "opts": [
+          "About 10",
+          "Around 175",
+          "Over 10,000",
+          "Just 1"
+        ],
+        "correct": 1,
+        "explain": "There are roughly 175 known species of pitcher plants across different plant families."
+      },
+      {
+        "q": "The largest tropical pitcher plants have occasionally been found trapping what larger creatures?",
+        "opts": [
+          "Small rodents",
+          "Birds of prey",
+          "Fish",
+          "Large dogs"
+        ],
+        "correct": 0,
+        "explain": "Some of the biggest tropical pitcher plants are large enough to occasionally trap small rodents."
+      },
+      {
+        "q": "A pitcher plant's \"pitcher\" shape is actually a modified what?",
+        "opts": [
+          "Root",
+          "Flower petal",
+          "Leaf",
+          "Seed"
+        ],
+        "correct": 2,
+        "explain": "The pitcher shape is a highly modified leaf, adapted over time into an effective trap."
+      },
+      {
+        "q": "Where are most tropical pitcher plants (genus Nepenthes) naturally found?",
+        "opts": [
+          "Tropical Asia, like Borneo and Sumatra",
+          "Antarctica",
+          "The Sahara Desert",
+          "Deep in the ocean"
+        ],
+        "correct": 0,
+        "explain": "Most Nepenthes pitcher plants grow in tropical parts of Asia, especially rainforests in Borneo and Sumatra."
+      },
+      {
+        "q": "What is the North American pitcher plant genus called?",
+        "opts": [
+          "Drosera",
+          "Nepenthes",
+          "Sarracenia",
+          "Dionaea"
+        ],
+        "correct": 2,
+        "explain": "North American pitcher plants belong to the genus Sarracenia, separate from the tropical Nepenthes."
+      },
+      {
+        "q": "Many pitcher plants have a lid-like flap above the opening — what is it called?",
+        "opts": [
+          "An operculum",
+          "A visor",
+          "A cap-hood",
+          "A shutter"
+        ],
+        "correct": 0,
+        "explain": "This lid-like structure is called an operculum, and it can help keep out rain or attract insects."
+      },
+      {
+        "q": "Can any small animals live safely inside some pitcher plants without being digested?",
+        "opts": [
+          "No, everything inside is always digested",
+          "Yes, some insect larvae and small creatures live inside unharmed",
+          "Only ghosts can live inside",
+          "Pitcher plants have no inside space"
+        ],
+        "correct": 1,
+        "explain": "Certain mosquito larvae, spiders, and other small creatures can live inside some pitcher plants without being harmed, forming a mini ecosystem."
+      },
+      {
+        "q": "Some large tropical pitcher plants get extra nutrients from an unusual mutualistic partner — what?",
+        "opts": [
+          "Tree shrews or bats that use the pitcher as a toilet",
+          "Birds that build nests inside",
+          "Fish that swim inside",
+          "Other pitcher plants"
+        ],
+        "correct": 0,
+        "explain": "A few giant Nepenthes species have evolved a surprising partnership: tree shrews or bats visit, feed on nectar, and leave droppings that fertilize the plant."
+      },
+      {
+        "q": "What helps some pitcher plants digest the insects that fall inside?",
+        "opts": [
+          "Digestive enzymes and sometimes helpful bacteria in the fluid",
+          "Simply drying them out in the sun",
+          "Freezing them solid",
+          "Nothing — insects just float there forever"
+        ],
+        "correct": 0,
+        "explain": "A pool of digestive fluid at the bottom of the pitcher, containing enzymes and sometimes bacteria, slowly breaks down trapped insects."
+      }
+    ],
+    "facts": [
+      "The biggest tropical pitcher plants can hold more than a liter of digestive fluid — big enough to occasionally trap small vertebrates.",
+      "Some pitcher plant species have a lid called an operculum that helps keep out rain, so the digestive fluid doesn't get too diluted.",
+      "A few giant pitcher plant species have formed a surprising friendship with tree shrews, which feed on nectar and leave droppings that fertilize the plant.",
+      "Pitcher plants and Venus flytraps aren't closely related — they evolved similar carnivorous tricks completely independently."
+    ],
+    "resources": [
+      {
+        "label": "Carnivorous plants explained at Kew Gardens",
+        "url": "https://www.kew.org/read-and-watch/carnivorous-plants"
+      },
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://kids.nationalgeographic.com/awesome-8/article/carnivorous-plants"
+      }
+    ]
+  },
+  {
+    "id": "sundew",
+    "emoji": "💧",
+    "name": "Sundew",
+    "intro": "A sundew's leaves are covered in tiny hair-like tentacles, each tipped with a glistening, sticky drop that looks like dew — but it's actually a trap for insects.",
+    "clues": [
+      "I'm a small carnivorous plant covered in sparkly, sticky drops.",
+      "Insects think my glistening drops are dew or nectar, but they're actually glue.",
+      "My name comes from a Greek word meaning 'dew,' even though what I make isn't water at all."
+    ],
+    "questions": [
+      {
+        "q": "What scientific plant genus do sundews belong to?",
+        "opts": [
+          "Drosera",
+          "Nepenthes",
+          "Sarracenia",
+          "Dionaea"
+        ],
+        "correct": 0,
+        "explain": "Sundews belong to the genus Drosera, which includes over a hundred different species."
+      },
+      {
+        "q": "What does the word \"Drosera\" come from and mean?",
+        "opts": [
+          "A Greek word meaning \"dew\"",
+          "A Latin word meaning \"sharp\"",
+          "An old word meaning \"sticky leaf\"",
+          "A word meaning \"sunlight\""
+        ],
+        "correct": 0,
+        "explain": "\"Drosera\" comes from the Greek word \"drosos,\" meaning dew, describing the plant's glistening drops."
+      },
+      {
+        "q": "How do sundew leaves mainly trap insects?",
+        "opts": [
+          "With sticky, dew-like drops on tentacle-like hairs",
+          "By snapping shut instantly",
+          "By trapping them in a deep pitcher",
+          "By shooting out a sticky tongue"
+        ],
+        "correct": 0,
+        "explain": "Sundew leaves are covered in tentacle-like hairs tipped with sticky drops that trap insects that land on them."
+      },
+      {
+        "q": "What type of trap is a sundew's leaf considered, compared to a Venus flytrap's snap trap?",
+        "opts": [
+          "A flypaper (adhesive) trap",
+          "A pitfall trap",
+          "A bladder trap",
+          "A lobster-pot trap"
+        ],
+        "correct": 0,
+        "explain": "Sundews use what's called a flypaper trap — sticky surfaces that catch prey — unlike the snapping or pitfall traps of other carnivorous plants."
+      },
+      {
+        "q": "What is the sticky substance on a sundew's tentacles actually made of?",
+        "opts": [
+          "Mucilage, a sticky plant secretion",
+          "Real water droplets",
+          "Melted wax",
+          "Tree sap"
+        ],
+        "correct": 0,
+        "explain": "The glistening drops are mucilage, a thick, sticky secretion — not real dew or water."
+      },
+      {
+        "q": "About how many known sundew species exist worldwide?",
+        "opts": [
+          "Fewer than 5",
+          "Around 20",
+          "Over 190",
+          "More than 10,000"
+        ],
+        "correct": 2,
+        "explain": "Scientists have identified over 190 species of Drosera sundews found around the world."
+      },
+      {
+        "q": "On which continent are sundews NOT naturally found?",
+        "opts": [
+          "Antarctica",
+          "Australia",
+          "North America",
+          "Africa"
+        ],
+        "correct": 0,
+        "explain": "Sundews grow naturally on every continent except Antarctica."
+      },
+      {
+        "q": "What happens to a sundew's tentacles once an insect gets stuck?",
+        "opts": [
+          "They slowly curl inward to bring the prey to the leaf surface",
+          "They fall off immediately",
+          "They turn into flowers",
+          "Nothing happens at all"
+        ],
+        "correct": 0,
+        "explain": "Once prey is trapped, the surrounding tentacles slowly bend inward, pressing the insect against the leaf so it can be digested."
+      },
+      {
+        "q": "Which sundew species has the fastest-moving trap part of any carnivorous plant?",
+        "opts": [
+          "The snap-tentacle sundew (Drosera glanduligera)",
+          "The round-leaved sundew",
+          "The king sundew",
+          "The cape sundew"
+        ],
+        "correct": 0,
+        "explain": "The snap-tentacle sundew has special outer tentacles that catapult insects onto its sticky center incredibly fast."
+      },
+      {
+        "q": "About how fast can the snap-tentacle sundew's fastest tentacles move?",
+        "opts": [
+          "In about 75 milliseconds — nearly as fast as a blink",
+          "About 1 hour",
+          "About 10 minutes",
+          "About 1 full day"
+        ],
+        "correct": 0,
+        "explain": "These tentacles can snap in roughly 75 milliseconds, among the fastest movements known in the entire plant kingdom."
+      },
+      {
+        "q": "Do sundews still make their own food through photosynthesis like ordinary plants?",
+        "opts": [
+          "Yes — trapping insects just adds extra nutrients missing from poor soil",
+          "No, they only survive by eating insects",
+          "They photosynthesize only at night",
+          "They have no leaves, so they cannot photosynthesize"
+        ],
+        "correct": 0,
+        "explain": "Sundews still photosynthesize normally; trapping insects simply supplies extra nitrogen that poor, boggy soil lacks."
+      },
+      {
+        "q": "What is the largest sundew species, able to catch bigger insects than most?",
+        "opts": [
+          "King sundew (Drosera regia)",
+          "Round-leaved sundew",
+          "Pygmy sundew",
+          "Cape sundew"
+        ],
+        "correct": 0,
+        "explain": "The king sundew, native to South Africa, has unusually long leaves and can trap larger prey than most Drosera species."
+      },
+      {
+        "q": "What kind of habitat do most sundews prefer?",
+        "opts": [
+          "Sunny, boggy, nutrient-poor wetlands",
+          "Deep dark caves",
+          "Dry deserts",
+          "The bottom of the ocean"
+        ],
+        "correct": 0,
+        "explain": "Sundews typically thrive in sunny, wet, nutrient-poor bogs and marshes where few other plants can get enough nutrients."
+      },
+      {
+        "q": "What helps break down (digest) an insect once it's trapped on a sundew leaf?",
+        "opts": [
+          "Digestive enzymes secreted by the leaf",
+          "Sunlight alone",
+          "Cold temperatures",
+          "Other insects that arrive to help"
+        ],
+        "correct": 0,
+        "explain": "The sundew leaf secretes digestive enzymes that slowly break down the trapped insect so nutrients can be absorbed."
+      },
+      {
+        "q": "True or false: sundews use their sticky drops mainly to attract pollinating bees.",
+        "opts": [
+          "True",
+          "False"
+        ],
+        "correct": 1,
+        "explain": "False — the sticky drops are for trapping prey. Sundew flowers usually grow on a separate tall stalk, away from the sticky traps, so pollinators aren't accidentally caught."
+      }
+    ],
+    "facts": [
+      "Some sundew species make special detachable buds called gemmae, which a single raindrop can fling over a meter away to grow into a new plant.",
+      "A sundew's glistening drops aren't real dew at all — they're a thick, glue-like secretion called mucilage.",
+      "The sundew family includes over 190 species, making it one of the largest groups of carnivorous plants on Earth.",
+      "Sundews and Venus flytraps are actually close plant relatives, both belonging to the same plant family, Droseraceae."
+    ],
+    "resources": [
+      {
+        "label": "Round-leafed sundew plant profile at Kew Gardens",
+        "url": "https://www.kew.org/plants/round-leafed-sundew"
+      },
+      {
+        "label": "Carnivorous plants explained at Kew Gardens",
+        "url": "https://www.kew.org/read-and-watch/carnivorous-plants"
+      },
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://kids.nationalgeographic.com/awesome-8/article/carnivorous-plants"
+      }
+    ]
+  },
+  {
+    "id": "bladderwort",
+    "emoji": "🫧",
+    "name": "Bladderwort",
+    "intro": "Bladderworts are carnivorous plants with tiny underwater traps that suck in prey faster than the blink of an eye — making them some of the fastest-moving plants on Earth.",
+    "facts": [
+      "A bladderwort's trap can suck in its prey in about 0.02 seconds — roughly the time it takes a human to blink.",
+      "There are over 300 known species of bladderwort, found on every continent except Antarctica.",
+      "Bladderworts have no roots at all — they float freely in water or creep through wet soil.",
+      "Despite being carnivorous, bladderworts still grow pretty yellow or purple flowers that rise above the water."
+    ],
+    "resources": [
+      {
+        "label": "Carnivorous plants explained at Kew Gardens",
+        "url": "https://www.kew.org/read-and-watch/carnivorous-plants"
+      },
+      {
+        "label": "Bladderwort facts at Missouri Dept. of Conservation",
+        "url": "https://mdc.mo.gov/discover-nature/field-guide/bladderworts"
+      }
+    ],
+    "clues": [
+      "I'm a carnivorous plant, but I hunt underwater instead of using sticky leaves.",
+      "I have tiny traps that suck in prey faster than you can blink.",
+      "I have no roots at all, and I float freely in ponds and boggy water."
+    ],
+    "questions": [
+      {
+        "q": "How does a bladderwort mainly catch its prey?",
+        "opts": [
+          "With tiny underwater suction traps",
+          "By snapping shut like a jaw",
+          "By trapping insects in sticky pools",
+          "By digging traps in soil"
+        ],
+        "correct": 0,
+        "explain": "Bladderworts use tiny bladder-shaped traps that suck in small prey with a sudden rush of water."
+      },
+      {
+        "q": "About how fast can a bladderwort's trap suck in its prey?",
+        "opts": [
+          "About 0.02 seconds, nearly as fast as a blink",
+          "About 1 hour",
+          "About 10 minutes",
+          "About 1 full day"
+        ],
+        "correct": 0,
+        "explain": "The trap door snaps open and shut in roughly 0.02 seconds, one of the fastest movements in the plant kingdom."
+      },
+      {
+        "q": "About how many species of bladderwort (Utricularia) are known?",
+        "opts": [
+          "Fewer than 10",
+          "Around 50",
+          "Over 300",
+          "Just 2"
+        ],
+        "correct": 2,
+        "explain": "There are more than 300 known bladderwort species, making them one of the largest carnivorous plant genera."
+      },
+      {
+        "q": "Which body part does a bladderwort notably lack?",
+        "opts": [
+          "Flowers",
+          "Roots",
+          "Leaves entirely",
+          "Stems entirely"
+        ],
+        "correct": 1,
+        "explain": "Bladderworts have no true roots — they float in water or creep through wet soil instead."
+      },
+      {
+        "q": "What kind of tiny creatures do bladderworts typically trap?",
+        "opts": [
+          "Water fleas and mosquito larvae",
+          "Birds",
+          "Large fish",
+          "Frogs only"
+        ],
+        "correct": 0,
+        "explain": "Bladderworts mainly trap tiny aquatic creatures like water fleas, mosquito larvae, and other small organisms."
+      },
+      {
+        "q": "What triggers a bladderwort trap to suck in prey?",
+        "opts": [
+          "Trigger hairs near the trap opening being brushed",
+          "Sunlight hitting the trap",
+          "A loud noise",
+          "Cold temperatures"
+        ],
+        "correct": 0,
+        "explain": "Tiny trigger hairs near the trap opening cause the trap door to snap open when brushed by passing prey."
+      },
+      {
+        "q": "Do bladderworts still produce flowers even though they are carnivorous?",
+        "opts": [
+          "Yes, many have bright yellow or purple flowers",
+          "No, they never flower",
+          "They only flower underwater",
+          "They only flower in winter"
+        ],
+        "correct": 0,
+        "explain": "Bladderworts still grow flowers, often bright yellow or purple, held above the water on slender stalks."
+      },
+      {
+        "q": "Where are bladderworts found in the world?",
+        "opts": [
+          "On every continent except Antarctica",
+          "Only in one small area of the USA",
+          "Only in deep oceans",
+          "Only in deserts"
+        ],
+        "correct": 0,
+        "explain": "Bladderworts are among the most widespread carnivorous plants, found on every continent except Antarctica."
+      }
+    ]
+  },
+  {
+    "id": "shark",
+    "emoji": "🦈",
+    "name": "Shark",
+    "intro": "Sharks have been around for more than 400 million years — even longer than dinosaurs! Their skeletons are made of flexible cartilage, not bone.",
+    "clues": [
+      "I live in the ocean and I've been around for an incredibly long time.",
+      "My skeleton isn't made of bone.",
+      "I've existed on Earth for over 400 million years — even longer than dinosaurs!"
+    ],
+    "questions": [
+      {
+        "q": "What is a shark's skeleton mainly made of?",
+        "opts": [
+          "Hard bone",
+          "Cartilage",
+          "Plastic-like material",
+          "It has no skeleton"
+        ],
+        "correct": 1,
+        "explain": "A shark's skeleton is made of flexible cartilage rather than hard bone."
+      },
+      {
+        "q": "About how long have sharks existed on Earth?",
+        "opts": [
+          "About 1 million years",
+          "About 50 million years",
+          "Over 400 million years",
+          "Only a few thousand years"
+        ],
+        "correct": 2,
+        "explain": "Fossil evidence suggests sharks have existed for more than 400 million years, long before dinosaurs."
+      },
+      {
+        "q": "About how many shark species exist today?",
+        "opts": [
+          "About 10",
+          "About 50",
+          "Around 500",
+          "Over 100,000"
+        ],
+        "correct": 2,
+        "explain": "Scientists recognize roughly 500 different species of sharks living in oceans today."
+      },
+      {
+        "q": "What's special about shark teeth?",
+        "opts": [
+          "They never fall out",
+          "They keep growing back throughout life",
+          "Sharks only have a few teeth total",
+          "They are soft like human teeth"
+        ],
+        "correct": 1,
+        "explain": "Shark teeth fall out and regrow continuously throughout their lives."
+      },
+      {
+        "q": "Which is the largest fish species in the world?",
+        "opts": [
+          "Great white shark",
+          "Whale shark",
+          "Hammerhead shark",
+          "Goldfish"
+        ],
+        "correct": 1,
+        "explain": "The whale shark is the largest fish species on Earth, though it feeds mostly on tiny plankton."
+      },
+      {
+        "q": "What is one of the biggest threats to shark populations today?",
+        "opts": [
+          "Too much food in the ocean",
+          "Overfishing by humans",
+          "Too many baby sharks being born",
+          "Sharks fighting each other"
+        ],
+        "correct": 1,
+        "explain": "Overfishing, driven partly by demand for shark fin soup, is one of the greatest threats to sharks."
+      },
+      {
+        "q": "How sensitive is a great white shark's sense of smell?",
+        "opts": [
+          "It can barely smell anything",
+          "It can detect one drop of blood in a huge volume of water",
+          "It can only smell things touching its nose",
+          "It cannot smell blood at all"
+        ],
+        "correct": 1,
+        "explain": "A great white's sense of smell is so strong it can detect a single drop of blood diluted in a huge volume of water."
+      },
+      {
+        "q": "Are humans a common part of a shark's natural diet?",
+        "opts": [
+          "Yes, sharks often hunt humans",
+          "No, humans are not typical shark prey",
+          "Only baby sharks eat humans",
+          "Sharks eat only humans"
+        ],
+        "correct": 1,
+        "explain": "Humans are not a natural part of a shark's diet — bites are rare and often a case of mistaken identity."
+      }
+    ],
+    "facts": [
+      "A shark can lose and regrow tens of thousands of teeth over the course of its lifetime.",
+      "Some sharks, like the great white, must keep swimming constantly to keep water — and oxygen — flowing over their gills.",
+      "Whale sharks, the largest fish in the sea, are gentle filter feeders that mostly eat tiny plankton.",
+      "Sharks have survived five mass extinction events, which means they're older than trees."
+    ],
+    "resources": [
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://www.natgeokids.com/uk/discover/animals/sea-life/great-white-sharks/"
+      }
+    ]
+  },
+  {
+    "id": "trex",
+    "emoji": "🦖",
+    "name": "Tyrannosaurus Rex",
+    "intro": "Tyrannosaurus rex, whose name means \"Tyrant Lizard King,\" had a bite powerful enough to crush a car — yet its two front arms were surprisingly tiny.",
+    "clues": [
+      "I was one of the biggest predators to ever walk the Earth.",
+      "My bite was strong enough to crush a car.",
+      "My name means 'Tyrant Lizard King,' and I had surprisingly tiny arms."
+    ],
+    "questions": [
+      {
+        "q": "What does the name \"Tyrannosaurus rex\" mean?",
+        "opts": [
+          "Gentle giant lizard",
+          "Tyrant lizard king",
+          "Fast runner lizard",
+          "Flying lizard"
+        ],
+        "correct": 1,
+        "explain": "The name comes from Greek and Latin words meaning \"Tyrant Lizard King.\""
+      },
+      {
+        "q": "When did T. rex live?",
+        "opts": [
+          "During the Ice Age",
+          "About 66-68 million years ago, in the Late Cretaceous",
+          "About 1 million years ago",
+          "At the same time as early humans"
+        ],
+        "correct": 1,
+        "explain": "T. rex lived during the Late Cretaceous period, roughly 66 to 68 million years ago."
+      },
+      {
+        "q": "About how long could a T. rex grow?",
+        "opts": [
+          "About 2 meters",
+          "About 6 meters",
+          "Up to about 12-13 meters",
+          "Over 50 meters"
+        ],
+        "correct": 2,
+        "explain": "T. rex could grow up to around 12-13 meters (about 40 feet) long."
+      },
+      {
+        "q": "What is unusual about T. rex's body compared to its huge size?",
+        "opts": [
+          "It had wings",
+          "It had very small arms",
+          "It had no tail",
+          "It had six legs"
+        ],
+        "correct": 1,
+        "explain": "Despite its massive size, T. rex had surprisingly small arms, and scientists still debate their exact use."
+      },
+      {
+        "q": "About how many teeth did a T. rex have?",
+        "opts": [
+          "About 10",
+          "About 60",
+          "Over 500",
+          "It had no teeth"
+        ],
+        "correct": 1,
+        "explain": "T. rex had around 60 large, serrated teeth for tearing flesh."
+      },
+      {
+        "q": "What most likely caused T. rex and other dinosaurs to go extinct?",
+        "opts": [
+          "A disease",
+          "An asteroid impact",
+          "Volcanic winter alone",
+          "Running out of food"
+        ],
+        "correct": 1,
+        "explain": "Most scientists agree a massive asteroid impact about 66 million years ago caused the mass extinction."
+      },
+      {
+        "q": "About how fast could a T. rex likely run?",
+        "opts": [
+          "Up to about 20 mph",
+          "Over 100 mph",
+          "Less than 1 mph",
+          "It could not run at all"
+        ],
+        "correct": 0,
+        "explain": "Estimates suggest T. rex could run at speeds up to about 20 miles per hour."
+      },
+      {
+        "q": "T. rex is especially famous for having a powerful sense of which kind?",
+        "opts": [
+          "Hearing",
+          "Smell",
+          "Touch",
+          "Taste"
+        ],
+        "correct": 1,
+        "explain": "T. rex had large areas of its brain devoted to processing smell, suggesting an excellent sense of smell."
+      }
+    ],
+    "facts": [
+      "A T. rex's bite could crush bone, with a force far stronger than any bite of any land animal alive today.",
+      "T. rex likely had unusually good binocular vision, similar to modern eagles, which helped it judge distance to prey.",
+      "Fossil evidence suggests some T. rex individuals lived to be around 28 to 30 years old.",
+      "Most T. rex fossils have been found in western North America, in areas that are now the USA and Canada."
+    ],
+    "resources": [
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://kids.nationalgeographic.com/animals/prehistoric/facts/tyrannosaurus-rex"
+      }
+    ]
+  },
+  {
+    "id": "triceratops",
+    "emoji": "🦕",
+    "name": "Triceratops",
+    "intro": "Triceratops means \"three-horned face.\" Scientists believe its horns and bony frill were mainly used for defense and for displaying to or contesting with other Triceratops.",
+    "clues": [
+      "I'm a dinosaur, but I only ate plants.",
+      "I have three horns on my face.",
+      "My name literally means 'three-horned face,' and I lived at the same time as T. rex."
+    ],
+    "questions": [
+      {
+        "q": "What does the name \"Triceratops\" mean?",
+        "opts": [
+          "Three-horned face",
+          "Fast-running lizard",
+          "Giant tail lizard",
+          "Armored back"
+        ],
+        "correct": 0,
+        "explain": "\"Triceratops\" comes from Greek words meaning \"three-horned face.\""
+      },
+      {
+        "q": "Was Triceratops a meat-eater or a plant-eater?",
+        "opts": [
+          "A meat-eater (carnivore)",
+          "A plant-eater (herbivore)",
+          "It ate only insects",
+          "It didn't eat at all"
+        ],
+        "correct": 1,
+        "explain": "Triceratops was a herbivore, feeding on tough plants using its beak-like mouth."
+      },
+      {
+        "q": "What did Triceratops use to snip off tough plants?",
+        "opts": [
+          "Sharp claws",
+          "A beak-like mouth",
+          "Its horns",
+          "A long tongue"
+        ],
+        "correct": 1,
+        "explain": "Triceratops had a bird-like beak that helped it clip leaves and plants."
+      },
+      {
+        "q": "What is the bony shield behind Triceratops's head called?",
+        "opts": [
+          "A helmet",
+          "A frill",
+          "A shell",
+          "A crown"
+        ],
+        "correct": 1,
+        "explain": "The large bony structure behind its head is called a frill."
+      },
+      {
+        "q": "About how long could a Triceratops grow?",
+        "opts": [
+          "About 2 meters",
+          "About 9 meters (30 feet)",
+          "About 50 meters",
+          "About 1 meter"
+        ],
+        "correct": 1,
+        "explain": "Triceratops could grow to about 9 meters (30 feet) long."
+      },
+      {
+        "q": "Which fierce dinosaur lived in the same place and time as Triceratops?",
+        "opts": [
+          "Stegosaurus",
+          "Tyrannosaurus rex",
+          "Brachiosaurus",
+          "Velociraptor only"
+        ],
+        "correct": 1,
+        "explain": "Triceratops and T. rex both lived in North America during the Late Cretaceous period."
+      },
+      {
+        "q": "What do scientists think the horns and frill were mainly used for?",
+        "opts": [
+          "Flying",
+          "Defense and displays or contests with other Triceratops",
+          "Digging underground burrows",
+          "Swimming faster"
+        ],
+        "correct": 1,
+        "explain": "Evidence suggests the horns and frill were used for self-defense and for contests or displays among Triceratops."
+      },
+      {
+        "q": "Triceratops fossils are considered among the ___ dinosaur fossils ever found?",
+        "opts": [
+          "Rarest",
+          "Most common",
+          "Least studied",
+          "Only recently discovered"
+        ],
+        "correct": 1,
+        "explain": "Triceratops is one of the most commonly found dinosaur fossils in North America."
+      }
+    ],
+    "facts": [
+      "A Triceratops skull could grow to about 2 meters (over 6 feet) long — one of the largest skulls of any land animal ever known.",
+      "Fossil evidence of bone beds with many individuals suggests Triceratops likely lived together in herds.",
+      "Its bony frill may have also helped regulate body temperature, in addition to defense and display.",
+      "Triceratops was one of the last dinosaur species alive before the mass extinction 66 million years ago."
+    ],
+    "resources": [
+      {
+        "label": "Read more at National Geographic Kids",
+        "url": "https://kids.nationalgeographic.com/animals/prehistoric/facts/triceratops"
+      }
+    ]
+  }
 ];
 
-const quizQuestions = [
-  {q:'Why do chameleons mainly change color?', opts:['To hide from predators','To regulate temperature and mood','Just to look nice','Because they get lost'], correct:1, explain:'Chameleons change color mainly to regulate body temperature, express emotions, and attract mates — hiding from predators is only a minor reason!'},
-  {q:'How many hearts does an octopus have?', opts:['1','2','3','4'], correct:2, explain:'An octopus has 3 hearts, and its blood is blue!'},
-  {q:'Which tree is the tallest in the world?', opts:['Oak','Redwood','Pine','Willow'], correct:1, explain:'Redwoods are the tallest trees in the world — the tallest ones are over 115 meters!'},
-  {q:'What are cactus spines actually modified from?', opts:['Roots','Stems','Leaves','Flowers'], correct:2, explain:'Cactus spines are modified leaves, which helps reduce water loss.'},
-  {q:'How do bees tell each other where to find nectar?', opts:['Singing','Dancing','Writing','Drawing'], correct:1, explain:"Bees perform a 'waggle dance' to share the direction and distance to nectar."},
-  {q:'How many generations does it usually take Monarch butterflies to complete one round-trip migration?', opts:['1','2','3-4','10'], correct:2, explain:'It takes a relay of 3-4 generations to complete one full round-trip migration!'},
-  {q:'Why does a Venus flytrap need to be touched twice before closing?', opts:["Because it's lazy",'To avoid snapping shut on raindrops or debris','It likes to take its time','No particular reason'], correct:1, explain:'This helps make sure it only catches real prey, not raindrops or small debris.'},
-  {q:'Why do young sunflower seedlings turn to follow the sun?', opts:['Just to look nice','To get more sunlight for photosynthesis',"They're afraid of the dark","It's completely random"], correct:1, explain:'Following the sun helps the leaves catch more light, which helps the plant photosynthesize better.'},
+/* ============================================================
+   STATE
+   ============================================================ */
+let lifetimePoints = 0;
+let balance = 0;
+let topicScores = {}; // topicId -> best raw correct-answer count for that topic (out of that topic's total questions)
+let rewards = [
+  {name:'Choose tonight\'s dessert', cost:20},
+  {name:'Pick the weekend family activity', cost:100},
+  {name:'15 extra minutes of screen time', cost:200},
+  {name:'A small toy or book', cost:300},
 ];
 
-const experiments = [
-  {emoji:'🥬', title:'Celery Rainbow Experiment', materials:['A celery stalk (with leaves if possible)','A clear cup','Water','Food coloring (red or blue)'],
-   steps:['Fill the cup halfway with water and add a few drops of food coloring, then stir','Cut the bottom of the celery stalk at an angle and place it in the colored water','Put it somewhere bright and wait 24–48 hours','Observe how the color spreads through the stem and leaves'],
-   note:"This shows how plants \"drink\" water — the colored water travels up tiny tubes inside the stem, all the way to the leaves!"},
-  {emoji:'🌱', title:'Bean Sprout Diary', materials:['A few mung beans or soybeans','A damp paper towel','A clear plastic bag or cup','A spray bottle'],
-   steps:['Dampen the paper towel — not too wet, not too dry','Wrap the beans in the damp towel and place them in a clear bag or cup','Keep it somewhere warm and bright, checking the moisture daily','Draw or photograph the changes every day for 5–7 days'],
-   note:'Watch closely: does the root or the sprout grow first? Which way does the root grow?'},
-  {emoji:'🍁', title:'Leaf Rubbing Field Guide', materials:['A few different leaves (ones with clear veins work best)','White paper','Crayons or colored pencils'],
-   steps:['Place a leaf vein-side up (the bumpier side) on a table','Cover it with a sheet of white paper','Gently rub the side of a crayon over it to reveal the vein pattern','Try different leaves and build your own leaf field guide'],
-   note:'Every leaf has its own unique vein pattern — try looking up which trees your leaves came from!'},
-  {emoji:'🫙', title:'Mini Terrarium', materials:['A clear glass jar with a lid','Small pebbles','Potting soil','A small plant or moss','A little water'],
-   steps:['Layer some pebbles at the bottom (for drainage)','Add a layer of potting soil on top','Plant the small plant or moss and press gently','Mist in a little water, then put the lid on and place it in indirect light'],
-   note:'Watch for water droplets forming on the glass after a few days — that\'s a mini water cycle happening right inside your jar!',
-   safety:"Don't seal the lid completely — leave a small gap for airflow so the plant doesn't get moldy."},
-];
+function addPoints(n){
+  lifetimePoints += n;
+  balance += n;
+  refreshHeader();
+  renderRewardsPage();
+}
 
-/* ---------------- tab nav ---------------- */
+function refreshHeader(){
+  document.getElementById('topbar-points').textContent = balance;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
 const tabs = document.querySelectorAll('.tab-item');
 tabs.forEach(t=>{
   t.addEventListener('click', ()=>{
@@ -253,78 +2464,102 @@ tabs.forEach(t=>{
   });
 });
 
-/* ---------------- progress state (in-memory) ---------------- */
-let progress = { exploredIds:new Set(), quizCorrect:0, quizDone:false, expOpened:new Set() };
-
-function updateBadges(){
-  const points = progress.exploredIds.size + progress.quizCorrect + progress.expOpened.size;
-  const maxPoints = exploreCards.length + quizQuestions.length + experiments.length; // 8+8+4=20
-  const pct = Math.min(100, Math.round(points / maxPoints * 100));
-  document.getElementById('badge-fill').style.width = pct + '%';
-  document.getElementById('badge-points').textContent = points + ' growth points';
-
-  const stages = [
-    {min:0, emoji:'🌰', label:'Seed Stage'},
-    {min:4, emoji:'🌱', label:'Sprout Stage'},
-    {min:9, emoji:'🌿', label:'Seedling Stage'},
-    {min:14, emoji:'🌳', label:'Growing Stage'},
-    {min:19, emoji:'🌸', label:'Blooming · Junior Nature Scientist!'},
-  ];
-  let current = stages[0];
-  stages.forEach(s=>{ if(points >= s.min) current = s; });
-  document.getElementById('badge-stage-emoji').textContent = current.emoji;
-  document.getElementById('badge-stage-label').textContent = current.label;
-  for(let i=0;i<5;i++){
-    document.getElementById('st'+i).classList.toggle('reached', points >= stages[i].min);
-  }
-
-  const badgeList = document.getElementById('badge-list');
-  const defs = [
-    {key:'explorer', earned: progress.exploredIds.size>=exploreCards.length, label:'🔍 Explored every card'},
-    {key:'quizmaster', earned: progress.quizCorrect>=6, label:'🎯 Got 6+ questions right'},
-    {key:'scientist', earned: progress.expOpened.size>=experiments.length, label:'🧪 Checked every experiment'},
-    {key:'allstar', earned: pct>=100, label:'🌟 All-around Nature Star'},
-  ];
-  badgeList.innerHTML = defs.map(d=>`<div class="badge-chip ${d.earned?'earned':''}">${d.label}</div>`).join('');
+function setActiveTab(id){
+  tabs.forEach(x=>x.classList.toggle('active', x.dataset.target===id));
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('show'));
+  document.getElementById(id).classList.add('show');
+  window.scrollTo(0,0);
 }
 
-/* ---------------- explore ---------------- */
-const exploreGrid = document.getElementById('explore-grid');
-exploreCards.forEach((c,i)=>{
-  const el = document.createElement('div');
-  el.className = 'explore-card';
-  el.innerHTML = `<span class="emoji">${c.emoji}</span><div class="name">${c.name}</div><div class="fact">${c.fact}</div>`;
-  el.addEventListener('click', ()=>{
-    el.classList.toggle('opened');
-    progress.exploredIds.add(i);
-    updateBadges();
+/* ============================================================
+   TOPICS LIST
+   ============================================================ */
+function renderTopicGrid(){
+  const grid = document.getElementById('topic-grid');
+  grid.innerHTML = '';
+  topics.forEach(t=>{
+    const el = document.createElement('div');
+    el.className = 'topic-card';
+    const score = topicScores[t.id];
+    const scoreHtml = score===undefined
+      ? '<span class="score-tag new">New!</span>'
+      : `<span class="score-tag">${score}/${t.questions.length}</span>`;
+    el.innerHTML = `<span class="emoji">${t.emoji}</span><div class="name">${t.name}</div>${scoreHtml}`;
+    el.addEventListener('click', ()=>showTopicDetail(t.id));
+    grid.appendChild(el);
   });
-  exploreGrid.appendChild(el);
-});
+}
 
-/* ---------------- quiz ---------------- */
+function showTopicList(){
+  setActiveTab('topics-list');
+}
+
+function showTopicDetail(id){
+  const t = topics.find(x=>x.id===id);
+  const card = document.getElementById('topic-detail-card');
+  const score = topicScores[id];
+  const factsHtml = (t.facts && t.facts.length)
+    ? `<div class="fun-facts"><h3>✨ More fun facts</h3><ul>${t.facts.map(f=>`<li>${f}</li>`).join('')}</ul></div>`
+    : '';
+  const resourcesHtml = (t.resources && t.resources.length)
+    ? t.resources.map(r=>`<a class="resource-link" href="${r.url}" target="_blank" rel="noopener">📖 ${r.label}<span class="arrow">→</span></a>`).join('')
+    : '';
+  card.innerHTML = `
+    <div class="topic-detail-head"><span class="emoji">${t.emoji}</span><h2>${t.name}</h2></div>
+    <div class="intro-fact">${t.intro}</div>
+    ${factsHtml}
+    ${resourcesHtml}
+    <button class="btn" onclick="startTopicQuiz('${id}')">${score===undefined ? `Start ${t.questions.length}-Question Quiz` : `Retake Quiz (best: ${score}/${t.questions.length})`}</button>
+  `;
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('show'));
+  document.getElementById('topic-detail').classList.add('show');
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   TOPIC QUIZ
+   ============================================================ */
+let currentTopic = null;
 let quizIndex = 0;
 let quizAnswered = false;
+let quizCorrectCount = 0;
+
+function startTopicQuiz(id){
+  currentTopic = topics.find(x=>x.id===id);
+  quizIndex = 0;
+  quizCorrectCount = 0;
+  document.getElementById('quiz-topic-title').textContent = `${currentTopic.emoji} ${currentTopic.name} Quiz`;
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('show'));
+  document.getElementById('topic-quiz').classList.add('show');
+  window.scrollTo(0,0);
+  renderQuiz();
+}
 
 function renderQuizProgress(){
   const bar = document.getElementById('quiz-progress');
-  bar.innerHTML = quizQuestions.map((_,i)=>`<span class="${i<quizIndex?'done':''}"></span>`).join('');
+  bar.innerHTML = currentTopic.questions.map((_,i)=>`<span class="${i<quizIndex?'done':''}"></span>`).join('');
 }
 
 function renderQuiz(){
   renderQuizProgress();
   const body = document.getElementById('quiz-body');
-  if(quizIndex >= quizQuestions.length){
+  if(quizIndex >= currentTopic.questions.length){
+    const prevBest = topicScores[currentTopic.id];
+    if(prevBest === undefined || quizCorrectCount > prevBest){
+      topicScores[currentTopic.id] = quizCorrectCount;
+    }
+    const earnedPoints = quizCorrectCount * 2;
+    addPoints(earnedPoints);
+    renderBadges();
     body.innerHTML = `
-      <div class="quiz-score">${progress.quizCorrect} / ${quizQuestions.length}</div>
-      <p style="text-align:center; color:var(--ink-soft); margin-bottom:16px;">You got ${progress.quizCorrect} questions right — nice work!</p>
-      <button class="btn ghost" onclick="restartQuiz()">Try again</button>
+      <div class="quiz-score">${quizCorrectCount} / ${currentTopic.questions.length}</div>
+      <p style="text-align:center; color:var(--ink-soft); margin-bottom:16px;">You earned ${earnedPoints} points (2 points per correct answer)! Best score for ${currentTopic.name}: ${topicScores[currentTopic.id]}/${currentTopic.questions.length}</p>
+      <button class="btn ghost" onclick="startTopicQuiz('${currentTopic.id}')">Try again</button>
+      <button class="btn" style="margin-top:10px;" onclick="showTopicList()">Back to Topics</button>
     `;
-    progress.quizDone = true;
-    updateBadges();
     return;
   }
-  const q = quizQuestions[quizIndex];
+  const q = currentTopic.questions[quizIndex];
   quizAnswered = false;
   body.innerHTML = `
     <div class="quiz-q">${quizIndex+1}. ${q.q}</div>
@@ -339,7 +2574,7 @@ function renderQuiz(){
       const opts = document.querySelectorAll('.quiz-opt');
       if(i === q.correct){
         btn.classList.add('correct');
-        progress.quizCorrect++;
+        quizCorrectCount++;
       }else{
         btn.classList.add('wrong');
         opts[q.correct].classList.add('correct');
@@ -348,46 +2583,197 @@ function renderQuiz(){
       const nextBtn = document.createElement('button');
       nextBtn.className = 'btn';
       nextBtn.style.marginTop = '14px';
-      nextBtn.textContent = quizIndex < quizQuestions.length-1 ? 'Next question →' : 'See my results 🎉';
+      nextBtn.textContent = quizIndex < currentTopic.questions.length-1 ? 'Next question →' : 'See my results 🎉';
       nextBtn.onclick = ()=>{ quizIndex++; renderQuiz(); };
       document.getElementById('quiz-body').appendChild(nextBtn);
-      updateBadges();
     });
   });
 }
-function restartQuiz(){ quizIndex=0; progress.quizCorrect=0; progress.quizDone=false; renderQuiz(); }
-renderQuiz();
 
-/* ---------------- experiments ---------------- */
-const expList = document.getElementById('exp-list');
-experiments.forEach((e,i)=>{
-  const el = document.createElement('div');
-  el.className = 'exp-item';
-  el.innerHTML = `
-    <div class="exp-head">
-      <span class="emoji">${e.emoji}</span>
-      <span class="title">${e.title}</span>
-      <span class="chev">▶</span>
-    </div>
-    <div class="exp-body">
-      <div class="lbl">What you'll need</div>
-      <ul>${e.materials.map(m=>`<li>${m}</li>`).join('')}</ul>
-      <div class="lbl">Steps</div>
-      <ol>${e.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
-      <div class="lbl">The science behind it</div>
-      <p>${e.note}</p>
-      ${e.safety ? `<div class="safety">⚠️ ${e.safety}</div>` : ''}
-    </div>
+/* ============================================================
+   MYSTERY GAME
+   ============================================================ */
+let mysteryTopic = null;
+let mysteryClueIndex = 0;
+let mysteryOver = false;
+
+function pickMysteryTopic(){
+  mysteryTopic = topics[Math.floor(Math.random()*topics.length)];
+  mysteryClueIndex = 0;
+  mysteryOver = false;
+  renderMystery();
+}
+
+function mysteryOptions(){
+  const opts = new Set([mysteryTopic.id]);
+  while(opts.size < 4){
+    opts.add(topics[Math.floor(Math.random()*topics.length)].id);
+  }
+  const arr = Array.from(opts);
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+let mysteryOptIds = null;
+
+function renderMystery(){
+  const body = document.getElementById('mystery-body');
+  if(!mysteryTopic){
+    body.innerHTML = `<p style="margin-bottom:14px;">Ready to test your nature knowledge? I'll give you clues one at a time — the fewer clues you need, the more points you earn!</p><button class="btn" onclick="pickMysteryTopic()">Start a Mystery</button>`;
+    return;
+  }
+  if(!mysteryOptIds || mysteryClueIndex===0){
+    mysteryOptIds = mysteryOptions();
+  }
+  const pointsForClue = 2;
+  let cluesHtml = '';
+  for(let i=0;i<=mysteryClueIndex;i++){
+    cluesHtml += `<div class="clue-card"><span class="num">${i+1}</span><span>${mysteryTopic.clues[i]}</span></div>`;
+  }
+  const optsHtml = mysteryOptIds.map(id=>{
+    const t = topics.find(x=>x.id===id);
+    return `<button class="mystery-opt" data-id="${id}">${t.emoji} ${t.name}</button>`;
+  }).join('');
+  body.innerHTML = `
+    ${cluesHtml}
+    <div class="mystery-points">Guess now for ${pointsForClue} point${pointsForClue>1?'s':''}!</div>
+    <div id="mystery-opts">${optsHtml}</div>
   `;
-  el.querySelector('.exp-head').addEventListener('click', ()=>{
-    el.classList.toggle('open');
-    progress.expOpened.add(i);
-    updateBadges();
+  document.querySelectorAll('.mystery-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(mysteryOver) return;
+      const guess = btn.dataset.id;
+      if(guess === mysteryTopic.id){
+        mysteryOver = true;
+        btn.classList.add('correct');
+        addPoints(pointsForClue);
+        renderBadges();
+        setTimeout(()=>{
+          document.getElementById('mystery-body').innerHTML = `
+            <div class="mystery-result">
+              <div class="emoji">${mysteryTopic.emoji}</div>
+              <div class="msg">It was the ${mysteryTopic.name}!</div>
+              <p style="color:var(--ink-soft); margin-bottom:14px;">You earned ${pointsForClue} point${pointsForClue>1?'s':''}.</p>
+              <button class="btn" onclick="pickMysteryTopic()">Next Mystery</button>
+            </div>`;
+        }, 600);
+      }else{
+        btn.classList.add('wrong');
+        btn.disabled = true;
+        if(mysteryClueIndex < mysteryTopic.clues.length-1){
+          setTimeout(()=>{ mysteryClueIndex++; renderMystery(); }, 700);
+        }else{
+          mysteryOver = true;
+          setTimeout(()=>{
+            document.getElementById('mystery-body').innerHTML = `
+              <div class="mystery-result">
+                <div class="emoji">${mysteryTopic.emoji}</div>
+                <div class="msg">It was the ${mysteryTopic.name}!</div>
+                <p style="color:var(--ink-soft); margin-bottom:14px;">So close — no points this time, but now you know for next time!</p>
+                <button class="btn" onclick="pickMysteryTopic()">Try Another Mystery</button>
+              </div>`;
+          }, 700);
+        }
+      }
+    });
   });
-  expList.appendChild(el);
-});
+}
 
-updateBadges();
+/* ============================================================
+   REWARDS / BADGES
+   ============================================================ */
+function renderBadges(){
+  // 2 points per correct answer, so max points = total questions across all topics * 2
+  const maxPoints = topics.reduce((sum,t)=> sum + t.questions.length*2, 0);
+  const pct = Math.min(100, Math.round(lifetimePoints / maxPoints * 100));
+  document.getElementById('badge-fill').style.width = pct + '%';
+  document.getElementById('badge-points').textContent = lifetimePoints + ' lifetime points earned';
+
+  const stageMeta = [
+    {emoji:'🌰', label:'Seed Stage'},
+    {emoji:'🌱', label:'Sprout Stage'},
+    {emoji:'🌿', label:'Seedling Stage'},
+    {emoji:'🌳', label:'Growing Stage'},
+    {emoji:'🌸', label:'Blooming · Junior Nature Scientist!'},
+  ];
+  const stageFractions = [0, 0.125, 1/3, 2/3, 1];
+  const stages = stageFractions.map((f,i)=>({
+    min: Math.round(maxPoints * f),
+    emoji: stageMeta[i].emoji,
+    label: stageMeta[i].label,
+  }));
+  let current = stages[0];
+  stages.forEach(s=>{ if(lifetimePoints >= s.min) current = s; });
+  document.getElementById('badge-stage-emoji').textContent = current.emoji;
+  document.getElementById('badge-stage-label').textContent = current.label;
+  for(let i=0;i<5;i++){
+    document.getElementById('st'+i).classList.toggle('reached', lifetimePoints >= stages[i].min);
+  }
+
+  const topicsCompleted = Object.keys(topicScores).length;
+  const perfectTopics = topics.filter(t => topicScores[t.id] !== undefined && topicScores[t.id] === t.questions.length).length;
+  const badgeList = document.getElementById('badge-list');
+  const defs = [
+    {earned: topicsCompleted>=topics.length, label:'📚 Tried every topic quiz'},
+    {earned: perfectTopics>=1, label:'💯 Got a perfect score on a topic'},
+    {earned: perfectTopics>=5, label:'🏅 Five perfect topic scores'},
+    {earned: lifetimePoints>=maxPoints, label:'🌟 All-around Nature Star'},
+  ];
+  badgeList.innerHTML = defs.map(d=>`<div class="badge-chip ${d.earned?'earned':''}">${d.label}</div>`).join('');
+}
+
+function renderRewardsPage(){
+  document.getElementById('balance-display').textContent = balance;
+  const list = document.getElementById('reward-list');
+  list.innerHTML = rewards.map((r,i)=>`
+    <div class="reward-item">
+      <div class="info">
+        <div class="rname">${r.name}</div>
+        <div class="rcost">${r.cost} points</div>
+      </div>
+      <button class="btn small" ${balance<r.cost?'disabled':''} onclick="redeemReward(${i})">Redeem</button>
+      <button class="del" onclick="deleteReward(${i})" title="Remove reward">✕</button>
+    </div>
+  `).join('');
+}
+
+function redeemReward(i){
+  const r = rewards[i];
+  if(balance < r.cost) return;
+  balance -= r.cost;
+  refreshHeader();
+  renderRewardsPage();
+  alert(`🎉 Redeemed: "${r.name}"! Show this screen to Mom or Dad.`);
+}
+
+function deleteReward(i){
+  rewards.splice(i,1);
+  renderRewardsPage();
+}
+
+function addReward(){
+  const nameInput = document.getElementById('new-reward-name');
+  const costInput = document.getElementById('new-reward-cost');
+  const name = nameInput.value.trim();
+  const cost = parseInt(costInput.value);
+  if(!name || !cost || cost<=0) return;
+  rewards.push({name, cost});
+  nameInput.value = '';
+  costInput.value = '';
+  renderRewardsPage();
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderTopicGrid();
+renderMystery();
+renderBadges();
+renderRewardsPage();
+refreshHeader();
 </script>
 </body>
 </html>
