@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nature Explorer</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2F7A4B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Nature Explorer">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+:root{
+  --bg:#F2F7EF; --panel:#FFFFFF; --ink:#1D3325; --ink-soft:#5B7863; --hair:#DCEBE0;
+  --green:#2F7A4B; --green-dark:#1F5734; --green-bg:#E1F0E5;
+  --sky:#3D8FC4; --sky-bg:#E3F1FA;
+  --sun:#E8A400; --sun-bg:#FDF1D2;
+  --coral:#E85A38; --coral-bg:#FDE4DC;
+  --radius:18px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  background:var(--bg); color:var(--ink); font-family:'Nunito',sans-serif;
+  font-size:16px; line-height:1.6; padding-bottom:86px;
+}
+.disp{ font-family:'Fredoka',sans-serif; }
+
+.topbar{
+  background:var(--green); color:#fff; padding:18px 20px 22px;
+  border-radius:0 0 24px 24px; position:relative; overflow:hidden;
+}
+.topbar-inner{ display:flex; align-items:center; gap:12px; position:relative; z-index:2; }
+.mascot{ font-size:34px; }
+.topbar h1{ font-family:'Fredoka'; font-weight:600; font-size:21px; }
+.topbar .sub{ font-size:13px; opacity:.85; margin-top:2px; }
+.topbar .deco{ position:absolute; font-size:60px; opacity:.15; right:-10px; top:-10px; }
+
+.wrap{ max-width:640px; margin:0 auto; padding:18px 16px; }
+section{ display:none; }
+section.show{ display:block; }
+
+.card{
+  background:var(--panel); border-radius:var(--radius); padding:18px;
+  margin-bottom:14px; box-shadow:0 2px 10px rgba(31,87,52,.06);
+}
+h2.sec-title{ font-family:'Fredoka'; font-size:20px; font-weight:600; margin-bottom:4px; }
+p.sec-sub{ color:var(--ink-soft); font-size:14px; margin-bottom:16px; }
+
+/* explore grid */
+.explore-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.explore-card{
+  background:var(--panel); border-radius:16px; padding:16px 14px; cursor:pointer;
+  box-shadow:0 2px 8px rgba(31,87,52,.08); border:2px solid transparent; transition:.15s;
+  text-align:center;
+}
+.explore-card:active{ transform:scale(.97); }
+.explore-card.opened{ border-color:var(--green); background:var(--green-bg); }
+.explore-card .emoji{ font-size:38px; display:block; margin-bottom:6px; }
+.explore-card .name{ font-family:'Fredoka'; font-weight:600; font-size:15px; }
+.explore-card .fact{ font-size:12.5px; color:var(--ink-soft); margin-top:8px; line-height:1.5; display:none; }
+.explore-card.opened .fact{ display:block; }
+
+/* quiz */
+.quiz-progress{ display:flex; gap:5px; margin-bottom:16px; }
+.quiz-progress span{ flex:1; height:6px; border-radius:4px; background:var(--hair); }
+.quiz-progress span.done{ background:var(--green); }
+.quiz-q{ font-family:'Fredoka'; font-size:18px; font-weight:600; margin-bottom:14px; }
+.quiz-opt{
+  display:block; width:100%; text-align:left; background:var(--panel); border:2px solid var(--hair);
+  border-radius:14px; padding:14px 16px; margin-bottom:10px; font-family:'Nunito'; font-size:15px;
+  font-weight:700; color:var(--ink); cursor:pointer;
+}
+.quiz-opt:active{ transform:scale(.98); }
+.quiz-opt.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); }
+.quiz-opt.wrong{ background:var(--coral-bg); border-color:var(--coral); color:var(--coral); }
+.quiz-explain{ background:var(--sky-bg); color:var(--green-dark); border-radius:12px; padding:12px 14px; font-size:14px; margin-top:6px; display:none; }
+.quiz-explain.show{ display:block; }
+.quiz-score{ font-family:'Fredoka'; font-size:40px; color:var(--green); text-align:center; margin:14px 0; }
+.btn{
+  font-family:'Fredoka'; font-weight:600; font-size:15px; padding:13px 22px; border-radius:14px;
+  border:none; background:var(--green); color:#fff; cursor:pointer; width:100%;
+}
+.btn:active{ transform:scale(.98); }
+.btn.ghost{ background:var(--sky-bg); color:var(--sky); }
+
+/* experiments */
+.exp-item{ border-bottom:1px solid var(--hair); padding:14px 0; }
+.exp-item:last-child{ border-bottom:none; }
+.exp-head{ display:flex; align-items:center; gap:10px; cursor:pointer; }
+.exp-head .emoji{ font-size:26px; }
+.exp-head .title{ font-family:'Fredoka'; font-weight:600; font-size:16px; flex:1; }
+.exp-head .chev{ color:var(--ink-soft); transition:.2s; font-size:14px; }
+.exp-item.open .chev{ transform:rotate(90deg); }
+.exp-body{ display:none; padding:12px 4px 0 36px; font-size:14px; }
+.exp-item.open .exp-body{ display:block; }
+.exp-body .lbl{ font-weight:800; color:var(--green-dark); font-size:12.5px; text-transform:uppercase; letter-spacing:.3px; margin:10px 0 4px; }
+.exp-body .lbl:first-child{ margin-top:0; }
+.exp-body ul, .exp-body ol{ padding-left:20px; }
+.exp-body li{ margin-bottom:4px; }
+.safety{ background:var(--coral-bg); color:var(--coral); border-radius:10px; padding:8px 12px; font-size:12.5px; margin-top:10px; font-weight:700; }
+
+/* badges */
+.badge-hero{ text-align:center; padding:10px 0 20px; }
+.badge-hero .stage{ font-size:70px; }
+.badge-hero .label{ font-family:'Fredoka'; font-size:19px; font-weight:600; margin-top:8px; }
+.badge-hero .points{ color:var(--ink-soft); font-size:13.5px; margin-top:2px; }
+.badge-track{ height:14px; background:var(--hair); border-radius:8px; overflow:hidden; margin:16px 0; }
+.badge-track-fill{ height:100%; background:linear-gradient(90deg, var(--green), var(--sun)); border-radius:8px; transition:width .3s; }
+.badge-stages{ display:flex; justify-content:space-between; font-size:22px; color:var(--ink-soft); opacity:.4; }
+.badge-stages span.reached{ opacity:1; }
+.badge-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+.badge-chip{ background:var(--sky-bg); border-radius:12px; padding:10px 12px; font-size:12.5px; text-align:center; color:var(--ink-soft); }
+.badge-chip.earned{ background:var(--sun-bg); color:var(--green-dark); font-weight:800; }
+
+/* bottom nav */
+.tabbar{
+  position:fixed; bottom:0; left:0; right:0; background:var(--panel); border-top:1px solid var(--hair);
+  display:flex; padding:8px 6px calc(8px + env(safe-area-inset-bottom, 0px)); z-index:20;
+  box-shadow:0 -2px 10px rgba(0,0,0,.05);
+}
+.tab-item{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 2px;
+  border-radius:12px; cursor:pointer; color:var(--ink-soft);
+}
+.tab-item .ic{ font-size:22px; }
+.tab-item .lbl{ font-size:11px; font-weight:700; }
+.tab-item.active{ color:var(--green); background:var(--green-bg); }
+
+@media (min-width:640px){
+  .wrap{ padding:24px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="deco">🌿</div>
+  <div class="topbar-inner">
+    <div class="mascot">🦔</div>
+    <div>
+      <h1>Nature Explorer</h1>
+      <div class="sub">Discover the wonders of animals & plants</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- EXPLORE -->
+  <section id="explore" class="show">
+    <h2 class="sec-title">🔍 Explore Cards</h2>
+    <p class="sec-sub">Tap a card to reveal a science secret inside</p>
+    <div class="explore-grid" id="explore-grid"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz">
+    <div class="card">
+      <h2 class="sec-title">🎯 Quiz Challenge</h2>
+      <p class="sec-sub">8 questions total — how many can you get right?</p>
+      <div class="quiz-progress" id="quiz-progress"></div>
+      <div id="quiz-body"></div>
+    </div>
+  </section>
+
+  <!-- EXPERIMENTS -->
+  <section id="experiments">
+    <div class="card">
+      <h2 class="sec-title">🧪 Home Experiments</h2>
+      <p class="sec-sub">Science experiments you can do at home — tap to see the steps</p>
+      <div id="exp-list"></div>
+    </div>
+  </section>
+
+  <!-- BADGES -->
+  <section id="badges">
+    <div class="card">
+      <h2 class="sec-title">🏆 My Growth</h2>
+      <p class="sec-sub">Exploring, quizzing, and experimenting help your seedling grow</p>
+      <div class="badge-hero">
+        <div class="stage" id="badge-stage-emoji">🌱</div>
+        <div class="label" id="badge-stage-label">Seed Stage</div>
+        <div class="points" id="badge-points">0 growth points</div>
+      </div>
+      <div class="badge-track"><div class="badge-track-fill" id="badge-fill" style="width:0%"></div></div>
+      <div class="badge-stages">
+        <span id="st0">🌰</span><span id="st1">🌱</span><span id="st2">🌿</span><span id="st3">🌳</span><span id="st4">🌸</span>
+      </div>
+      <div class="badge-list" id="badge-list"></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="tabbar">
+  <div class="tab-item active" data-target="explore"><span class="ic">🔍</span><span class="lbl">Explore</span></div>
+  <div class="tab-item" data-target="quiz"><span class="ic">🎯</span><span class="lbl">Quiz</span></div>
+  <div class="tab-item" data-target="experiments"><span class="ic">🧪</span><span class="lbl">Experiments</span></div>
+  <div class="tab-item" data-target="badges"><span class="ic">🏆</span><span class="lbl">Growth</span></div>
+</div>
+
+<script>
+/* ---------------- data ---------------- */
+const exploreCards = [
+  {emoji:'🦎', name:'Chameleon', fact:"Chameleons don't change color mainly to hide from predators — they do it to regulate body temperature, show emotions, and even attract a mate!"},
+  {emoji:'🌻', name:'Sunflower', fact:'Young sunflowers follow the sun during the day, a trick called "phototropism." But once they bloom, most face a fixed direction — usually east — and stop turning.'},
+  {emoji:'🦋', name:'Monarch Butterfly', fact:"Monarch butterflies migrate thousands of miles every year — but amazingly, it's actually their great-grandchildren who complete the full round trip!"},
+  {emoji:'🌵', name:'Cactus', fact:"A cactus's spines are actually modified leaves! This helps it lose much less water, and also protects it from being eaten."},
+  {emoji:'🐙', name:'Octopus', fact:'An octopus has three hearts! Its blood is blue, because it contains a copper-based protein called hemocyanin.'},
+  {emoji:'🌳', name:'Redwood Tree', fact:'The tallest redwood trees are over 115 meters tall — about as tall as a 30-story building — and can live for more than 2,000 years!'},
+  {emoji:'🪰', name:'Venus Flytrap', fact:"A Venus flytrap's leaves need to be touched twice before they snap shut, so it doesn't waste energy closing on raindrops or dust."},
+  {emoji:'🐝', name:'Bee', fact:"Bees perform a 'waggle dance' to tell other bees the direction and distance to a flower's nectar."},
+];
+
+const quizQuestions = [
+  {q:'Why do chameleons mainly change color?', opts:['To hide from predators','To regulate temperature and mood','Just to look nice','Because they get lost'], correct:1, explain:'Chameleons change color mainly to regulate body temperature, express emotions, and attract mates — hiding from predators is only a minor reason!'},
+  {q:'How many hearts does an octopus have?', opts:['1','2','3','4'], correct:2, explain:'An octopus has 3 hearts, and its blood is blue!'},
+  {q:'Which tree is the tallest in the world?', opts:['Oak','Redwood','Pine','Willow'], correct:1, explain:'Redwoods are the tallest trees in the world — the tallest ones are over 115 meters!'},
+  {q:'What are cactus spines actually modified from?', opts:['Roots','Stems','Leaves','Flowers'], correct:2, explain:'Cactus spines are modified leaves, which helps reduce water loss.'},
+  {q:'How do bees tell each other where to find nectar?', opts:['Singing','Dancing','Writing','Drawing'], correct:1, explain:"Bees perform a 'waggle dance' to share the direction and distance to nectar."},
+  {q:'How many generations does it usually take Monarch butterflies to complete one round-trip migration?', opts:['1','2','3-4','10'], correct:2, explain:'It takes a relay of 3-4 generations to complete one full round-trip migration!'},
+  {q:'Why does a Venus flytrap need to be touched twice before closing?', opts:["Because it's lazy",'To avoid snapping shut on raindrops or debris','It likes to take its time','No particular reason'], correct:1, explain:'This helps make sure it only catches real prey, not raindrops or small debris.'},
+  {q:'Why do young sunflower seedlings turn to follow the sun?', opts:['Just to look nice','To get more sunlight for photosynthesis',"They're afraid of the dark","It's completely random"], correct:1, explain:'Following the sun helps the leaves catch more light, which helps the plant photosynthesize better.'},
+];
+
+const experiments = [
+  {emoji:'🥬', title:'Celery Rainbow Experiment', materials:['A celery stalk (with leaves if possible)','A clear cup','Water','Food coloring (red or blue)'],
+   steps:['Fill the cup halfway with water and add a few drops of food coloring, then stir','Cut the bottom of the celery stalk at an angle and place it in the colored water','Put it somewhere bright and wait 24–48 hours','Observe how the color spreads through the stem and leaves'],
+   note:"This shows how plants \"drink\" water — the colored water travels up tiny tubes inside the stem, all the way to the leaves!"},
+  {emoji:'🌱', title:'Bean Sprout Diary', materials:['A few mung beans or soybeans','A damp paper towel','A clear plastic bag or cup','A spray bottle'],
+   steps:['Dampen the paper towel — not too wet, not too dry','Wrap the beans in the damp towel and place them in a clear bag or cup','Keep it somewhere warm and bright, checking the moisture daily','Draw or photograph the changes every day for 5–7 days'],
+   note:'Watch closely: does the root or the sprout grow first? Which way does the root grow?'},
+  {emoji:'🍁', title:'Leaf Rubbing Field Guide', materials:['A few different leaves (ones with clear veins work best)','White paper','Crayons or colored pencils'],
+   steps:['Place a leaf vein-side up (the bumpier side) on a table','Cover it with a sheet of white paper','Gently rub the side of a crayon over it to reveal the vein pattern','Try different leaves and build your own leaf field guide'],
+   note:'Every leaf has its own unique vein pattern — try looking up which trees your leaves came from!'},
+  {emoji:'🫙', title:'Mini Terrarium', materials:['A clear glass jar with a lid','Small pebbles','Potting soil','A small plant or moss','A little water'],
+   steps:['Layer some pebbles at the bottom (for drainage)','Add a layer of potting soil on top','Plant the small plant or moss and press gently','Mist in a little water, then put the lid on and place it in indirect light'],
+   note:'Watch for water droplets forming on the glass after a few days — that\'s a mini water cycle happening right inside your jar!',
+   safety:"Don't seal the lid completely — leave a small gap for airflow so the plant doesn't get moldy."},
+];
+
+/* ---------------- tab nav ---------------- */
+const tabs = document.querySelectorAll('.tab-item');
+tabs.forEach(t=>{
+  t.addEventListener('click', ()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('section').forEach(s=>s.classList.remove('show'));
+    document.getElementById(t.dataset.target).classList.add('show');
+    window.scrollTo(0,0);
+  });
+});
+
+/* ---------------- progress state (in-memory) ---------------- */
+let progress = { exploredIds:new Set(), quizCorrect:0, quizDone:false, expOpened:new Set() };
+
+function updateBadges(){
+  const points = progress.exploredIds.size + progress.quizCorrect + progress.expOpened.size;
+  const maxPoints = exploreCards.length + quizQuestions.length + experiments.length; // 8+8+4=20
+  const pct = Math.min(100, Math.round(points / maxPoints * 100));
+  document.getElementById('badge-fill').style.width = pct + '%';
+  document.getElementById('badge-points').textContent = points + ' growth points';
+
+  const stages = [
+    {min:0, emoji:'🌰', label:'Seed Stage'},
+    {min:4, emoji:'🌱', label:'Sprout Stage'},
+    {min:9, emoji:'🌿', label:'Seedling Stage'},
+    {min:14, emoji:'🌳', label:'Growing Stage'},
+    {min:19, emoji:'🌸', label:'Blooming · Junior Nature Scientist!'},
+  ];
+  let current = stages[0];
+  stages.forEach(s=>{ if(points >= s.min) current = s; });
+  document.getElementById('badge-stage-emoji').textContent = current.emoji;
+  document.getElementById('badge-stage-label').textContent = current.label;
+  for(let i=0;i<5;i++){
+    document.getElementById('st'+i).classList.toggle('reached', points >= stages[i].min);
+  }
+
+  const badgeList = document.getElementById('badge-list');
+  const defs = [
+    {key:'explorer', earned: progress.exploredIds.size>=exploreCards.length, label:'🔍 Explored every card'},
+    {key:'quizmaster', earned: progress.quizCorrect>=6, label:'🎯 Got 6+ questions right'},
+    {key:'scientist', earned: progress.expOpened.size>=experiments.length, label:'🧪 Checked every experiment'},
+    {key:'allstar', earned: pct>=100, label:'🌟 All-around Nature Star'},
+  ];
+  badgeList.innerHTML = defs.map(d=>`<div class="badge-chip ${d.earned?'earned':''}">${d.label}</div>`).join('');
+}
+
+/* ---------------- explore ---------------- */
+const exploreGrid = document.getElementById('explore-grid');
+exploreCards.forEach((c,i)=>{
+  const el = document.createElement('div');
+  el.className = 'explore-card';
+  el.innerHTML = `<span class="emoji">${c.emoji}</span><div class="name">${c.name}</div><div class="fact">${c.fact}</div>`;
+  el.addEventListener('click', ()=>{
+    el.classList.toggle('opened');
+    progress.exploredIds.add(i);
+    updateBadges();
+  });
+  exploreGrid.appendChild(el);
+});
+
+/* ---------------- quiz ---------------- */
+let quizIndex = 0;
+let quizAnswered = false;
+
+function renderQuizProgress(){
+  const bar = document.getElementById('quiz-progress');
+  bar.innerHTML = quizQuestions.map((_,i)=>`<span class="${i<quizIndex?'done':''}"></span>`).join('');
+}
+
+function renderQuiz(){
+  renderQuizProgress();
+  const body = document.getElementById('quiz-body');
+  if(quizIndex >= quizQuestions.length){
+    body.innerHTML = `
+      <div class="quiz-score">${progress.quizCorrect} / ${quizQuestions.length}</div>
+      <p style="text-align:center; color:var(--ink-soft); margin-bottom:16px;">You got ${progress.quizCorrect} questions right — nice work!</p>
+      <button class="btn ghost" onclick="restartQuiz()">Try again</button>
+    `;
+    progress.quizDone = true;
+    updateBadges();
+    return;
+  }
+  const q = quizQuestions[quizIndex];
+  quizAnswered = false;
+  body.innerHTML = `
+    <div class="quiz-q">${quizIndex+1}. ${q.q}</div>
+    <div id="quiz-opts">${q.opts.map((o,i)=>`<button class="quiz-opt" data-i="${i}">${o}</button>`).join('')}</div>
+    <div class="quiz-explain" id="quiz-explain">${q.explain}</div>
+  `;
+  document.querySelectorAll('.quiz-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(quizAnswered) return;
+      quizAnswered = true;
+      const i = parseInt(btn.dataset.i);
+      const opts = document.querySelectorAll('.quiz-opt');
+      if(i === q.correct){
+        btn.classList.add('correct');
+        progress.quizCorrect++;
+      }else{
+        btn.classList.add('wrong');
+        opts[q.correct].classList.add('correct');
+      }
+      document.getElementById('quiz-explain').classList.add('show');
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'btn';
+      nextBtn.style.marginTop = '14px';
+      nextBtn.textContent = quizIndex < quizQuestions.length-1 ? 'Next question →' : 'See my results 🎉';
+      nextBtn.onclick = ()=>{ quizIndex++; renderQuiz(); };
+      document.getElementById('quiz-body').appendChild(nextBtn);
+      updateBadges();
+    });
+  });
+}
+function restartQuiz(){ quizIndex=0; progress.quizCorrect=0; progress.quizDone=false; renderQuiz(); }
+renderQuiz();
+
+/* ---------------- experiments ---------------- */
+const expList = document.getElementById('exp-list');
+experiments.forEach((e,i)=>{
+  const el = document.createElement('div');
+  el.className = 'exp-item';
+  el.innerHTML = `
+    <div class="exp-head">
+      <span class="emoji">${e.emoji}</span>
+      <span class="title">${e.title}</span>
+      <span class="chev">▶</span>
+    </div>
+    <div class="exp-body">
+      <div class="lbl">What you'll need</div>
+      <ul>${e.materials.map(m=>`<li>${m}</li>`).join('')}</ul>
+      <div class="lbl">Steps</div>
+      <ol>${e.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+      <div class="lbl">The science behind it</div>
+      <p>${e.note}</p>
+      ${e.safety ? `<div class="safety">⚠️ ${e.safety}</div>` : ''}
+    </div>
+  `;
+  el.querySelector('.exp-head').addEventListener('click', ()=>{
+    el.classList.toggle('open');
+    progress.expOpened.add(i);
+    updateBadges();
+  });
+  expList.appendChild(el);
+});
+
+updateBadges();
+</script>
+</body>
+</html>
